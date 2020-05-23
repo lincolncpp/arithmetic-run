@@ -18,6 +18,7 @@ public class GameTest {
 
     @Test
     public void create() {
+        assertTrue(false);
     }
 
     @Test
