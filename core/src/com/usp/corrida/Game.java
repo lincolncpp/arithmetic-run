@@ -14,7 +14,6 @@ public class Game extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		img = new Texture("badlogic.jpg");
-		kkkkkkk
 	}
 
 	@Override
