@@ -1,4 +1,5 @@
 apply plugin: "java"
+apply plugin: "jacoco"
 
 sourceCompatibility = 1.7
 dependencies {
@@ -9,3 +10,11 @@ dependencies {
 sourceSets.main.java.srcDirs = [ "src/" ]
 
 eclipse.project.name = appName + "-core"
+
+jacocoTestReport {
+	reports {
+		xml.enabled true
+	}
+}
+
+test.finalizedBy jacocoTestReport
