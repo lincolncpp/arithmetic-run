@@ -52,7 +52,7 @@ public class TitleScreen extends ScreenAdapter {
         loop(delta);
 
         // Draw background
-        pos_x += delta*10f;
+        pos_x += delta*35f;
         game.background.render(pos_x);
     }
 

@@ -17,6 +17,9 @@ public class Core extends Game {
 	// Public batch
 	public SpriteBatch batch;
 
+	// Random instance
+	public Random rand = new Random();
+
 	// Screens
 	TitleScreen titleScreen;
 	GameScreen gameScreen;
@@ -43,7 +46,7 @@ public class Core extends Game {
 		gameScreen = new GameScreen(this);
 
 		// Font building
-		font = new BitmapFont();
+		font = new BitmapFont(Gdx.files.internal("font/clacon.fnt"));
 
 		// Background building
 		background = new Background(this);
