@@ -7,3 +7,5 @@ Jogo mobile educativo para estimular o raciocínio matemático.
 
 ![in game](https://i.ibb.co/Z8zFMYs/InGame.png)
 
+## Stack
+<img src="https://img.stackshare.io/service/995/K85ZWV2F.png" height="80px"><img src="https://img.stackshare.io/service/1010/m8jf0po4imu8t5eemjdd.png" height="80px"><img src="https://img.stackshare.io/service/4339/3c827c8875b77acbbaf83c73eecd0a43_400x400.png" height="80px"><img src="https://img.stackshare.io/service/27/sBsvBbjY.png" height="80px"><img src="https://img.stackshare.io/service/975/gradlephant-social-black-bg.png" height="80px"><img src="https://img.stackshare.io/service/2020/874086.png" height="80px"><img src="https://img.stackshare.io/service/11563/actions.png" height="80px">
