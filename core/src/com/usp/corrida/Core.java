@@ -38,6 +38,13 @@ public class Core extends Game {
 
 	@Override
 	public void create () {
+		// Camera building
+		width = Gdx.graphics.getWidth()/2f;
+		height = Gdx.graphics.getHeight()/2f;
+		camera = new OrthographicCamera(width, height);
+		camera.position.set(width/2f, height/2f, 0);
+		camera.update();
+
 		// Batch building
 		batch = new SpriteBatch();
 
@@ -50,13 +57,6 @@ public class Core extends Game {
 
 		// Background building
 		background = new Background(this);
-
-		// Camera building
-		width = Gdx.graphics.getWidth()/2f;
-		height = Gdx.graphics.getHeight()/2f;
-		camera = new OrthographicCamera(width, height);
-		camera.position.set(width/2f, height/2f, 0);
-		camera.update();
 
 		// Set initial screen
 		setScreen(titleScreen);

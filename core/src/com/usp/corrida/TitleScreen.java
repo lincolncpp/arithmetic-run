@@ -15,9 +15,6 @@ public class TitleScreen extends ScreenAdapter {
     // Core instance
     Core game;
 
-    // Screen variables
-    float pos_x = 0;
-
     public TitleScreen(Core game){
         this.game = game;
     }
@@ -52,8 +49,9 @@ public class TitleScreen extends ScreenAdapter {
         loop(delta);
 
         // Draw background
-        pos_x += delta*35f;
-        game.background.render(pos_x);
+        game.background.render(0);
+
+        game.font.draw(game.batch, "RECORDE: 9.632", 10, game.height-11);
     }
 
 }
