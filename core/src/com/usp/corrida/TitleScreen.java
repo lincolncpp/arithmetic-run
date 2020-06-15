@@ -3,20 +3,14 @@ package com.usp.corrida;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-
-import java.awt.*;
 
 public class TitleScreen extends ScreenAdapter {
 
     // Core instance
-    Core game;
+    Core core;
 
-    public TitleScreen(Core game){
-        this.game = game;
+    public TitleScreen(Core core){
+        this.core = core;
     }
 
     @Override
@@ -29,7 +23,7 @@ public class TitleScreen extends ScreenAdapter {
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean touchDown (int x, int y, int pointer, int button) {
-                game.setScreen(new GameScreen(game));
+                core.setScreen(new GameScreen(core));
                 return true;
             }
         });
@@ -49,9 +43,9 @@ public class TitleScreen extends ScreenAdapter {
         loop(delta);
 
         // Draw background
-        game.background.render(0);
+        core.game.render(delta, 0);
 
-        game.font.draw(game.batch, "RECORDE: 9.632", 10, game.height-11);
+        core.font.draw(core.batch, "RECORDE: 9.632", 10, core.height-11);
     }
 
 }

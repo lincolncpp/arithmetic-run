@@ -1,14 +1,13 @@
 package com.usp.corrida;
 
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class Core extends Game {
+public class Core extends com.badlogic.gdx.Game {
 
 	// Resolution variables
 	public float width;
@@ -24,8 +23,8 @@ public class Core extends Game {
 	TitleScreen titleScreen;
 	GameScreen gameScreen;
 
-	// Background
-	Background background;
+	// Game instance
+	Game game;
 
 	// Font
 	BitmapFont font;
@@ -56,7 +55,7 @@ public class Core extends Game {
 		font = new BitmapFont(Gdx.files.internal("font/clacon.fnt"));
 
 		// Background building
-		background = new Background(this);
+		game = new Game(this);
 
 		// Set initial screen
 		setScreen(titleScreen);
@@ -94,6 +93,6 @@ public class Core extends Game {
 
 		font.dispose();
 
-		background.dispose();
+		game.dispose();
 	}
 }

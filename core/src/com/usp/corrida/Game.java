@@ -6,10 +6,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import java.awt.geom.Point2D;
 
-public class Background {
+public class Game {
 
     // Core instance
-    Core game;
+    Core core;
 
     // Texture Pack
     Texture texBackground;
@@ -26,12 +26,15 @@ public class Background {
     TextureRegion texTile2;
 
     // Clouds
-    final int MAXCLOUDS = 5;
+    public static final int MAXCLOUDS = 5;
     float[] cloudPositionX = new float[MAXCLOUDS];
     float[] cloudPositionY = new float[MAXCLOUDS];
 
-    public Background(Core game){
-        this.game = game;
+    // Character
+    Character charMain;
+
+    public Game(Core core){
+        this.core = core;
 
         texBackground = new Texture(Gdx.files.internal("background.png"));
         texTerrain = new Texture(Gdx.files.internal("terrain.png"));
@@ -47,50 +50,53 @@ public class Background {
 
         // Setting initial cloud position
         for(int i = 0;i < MAXCLOUDS;i++){
-            cloudPositionX[i] = game.rand.getIntRand(-16, (int)game.width);
-            cloudPositionY[i] = game.rand.getIntRand(100,(int)game.height-64);
+            cloudPositionX[i] = core.rand.getIntRand(-16, (int)core.width);
+            cloudPositionY[i] = core.rand.getIntRand(100,(int)core.height-64);
         }
+
+        charMain = new Character(core, "sprites/1.png");
+        charMain.setPos(32, 32);
+        charMain.isMoving = true;
     }
 
-    public void loop(float delta){
+    public void render(float delta, float x){
 
-    }
-
-    public void render(float x){
         // Drawing top effect
-        int cnt1 = ((int)game.width-1)/16+1;
+        int cnt1 = ((int)core.width-1)/16+1;
         for(int i = 0;i < cnt1;i++){
-            game.batch.draw(texBgTop, 16*i, game.height-48);
+            core.batch.draw(texBgTop, 16*i, core.height-48);
         }
-        game.batch.draw(texBgBlack, 0, game.height-32, game.width, 32);
+        core.batch.draw(texBgBlack, 0, core.height-32, core.width, 32);
 
         // Drawing background clouds
-        int cnt3 = ((int)game.width-1)/160+1;
-        float offset3 = Utils.fixFloat((x/3f)%160);
+        int cnt3 = ((int)core.width-1)/160+1;
+        float offset3 = Utils.fixFloat((x/4f)%160);
         for(int i = 0;i < cnt3+1;i++){
-            game.batch.draw(texBgCloud, 160*i - offset3, 64);
+            core.batch.draw(texBgCloud, 160*i - offset3, 64);
         }
 
         // Drawing mountain
-        int cnt2 = ((int)game.width-1)/160+1;
+        int cnt2 = ((int)core.width-1)/160+1;
         float offset2 = Utils.fixFloat((x/2f)%160);
 
         for(int i = 0;i < cnt2+1;i++){
-            game.batch.draw(texBgMountain, 160*i - offset2, 16);
+            core.batch.draw(texBgMountain, 160*i - offset2, 16);
         }
 
         // Drawing terrain
-        int cnt4 = ((int)game.width-1)/16+1;
+        int cnt4 = ((int)core.width-1)/16+1;
         float offset4 = Utils.fixFloat(x%16);
         for(int i = 0;i < cnt4+1;i++){
-            game.batch.draw(texTile1, 16*i-offset4, 16);
-            game.batch.draw(texTile2, 16*i-offset4, 0);
+            core.batch.draw(texTile1, 16*i-offset4, 16);
+            core.batch.draw(texTile2, 16*i-offset4, 0);
         }
 
         // Drawing clouds
         for(int i = 0;i < MAXCLOUDS;i++){
-            game.batch.draw(texCloud, cloudPositionX[i], cloudPositionY[i]);
+            core.batch.draw(texCloud, cloudPositionX[i], cloudPositionY[i]);
         }
+
+        charMain.render(delta);
     }
 
     public void dispose(){

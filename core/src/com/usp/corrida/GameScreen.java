@@ -7,12 +7,12 @@ import com.badlogic.gdx.ScreenAdapter;
 public class GameScreen extends ScreenAdapter {
 
     // Core instance
-    Core game;
+    Core core;
 
     float x = 0;
 
-    public GameScreen(Core game){
-        this.game = game;
+    public GameScreen(Core core){
+        this.core = core;
     }
 
     @Override
@@ -46,8 +46,8 @@ public class GameScreen extends ScreenAdapter {
         x += delta*30;
 
         // Draw background
-        game.background.render(x);
+        core.game.render(delta, x);
 
-        game.font.draw(game.batch, "PONTOS: 0", 10, game.height-11);
+        core.font.draw(core.batch, "PONTOS: 0", 10, core.height-11);
     }
 }
