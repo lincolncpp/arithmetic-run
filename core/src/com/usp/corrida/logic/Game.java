@@ -1,10 +1,10 @@
-package com.usp.corrida;
+package com.usp.corrida.logic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-
-import java.awt.geom.Point2D;
+import com.usp.corrida.Core;
+import com.usp.corrida.utils.Utils;
 
 public class Game {
 
@@ -31,7 +31,7 @@ public class Game {
     float[] cloudPositionY = new float[MAXCLOUDS];
 
     // Character
-    Character charMain;
+    com.usp.corrida.logic.Character charMain;
 
     public Game(Core core){
         this.core = core;

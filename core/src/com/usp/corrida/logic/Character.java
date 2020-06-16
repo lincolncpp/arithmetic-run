@@ -1,7 +1,8 @@
-package com.usp.corrida;
+package com.usp.corrida.logic;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.usp.corrida.Core;
 
 import javax.swing.text.StyledEditorKit;
 

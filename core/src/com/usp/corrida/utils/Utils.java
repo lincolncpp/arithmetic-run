@@ -1,4 +1,4 @@
-package com.usp.corrida;
+package com.usp.corrida.utils;
 
 public class Utils {
 

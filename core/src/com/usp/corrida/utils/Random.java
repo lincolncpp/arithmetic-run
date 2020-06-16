@@ -1,4 +1,4 @@
-package com.usp.corrida;
+package com.usp.corrida.utils;
 
 import java.util.Calendar;
 

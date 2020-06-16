@@ -6,6 +6,10 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.usp.corrida.logic.Game;
+import com.usp.corrida.screens.GameScreen;
+import com.usp.corrida.screens.TitleScreen;
+import com.usp.corrida.utils.Random;
 
 public class Core extends com.badlogic.gdx.Game {
 
@@ -17,20 +21,20 @@ public class Core extends com.badlogic.gdx.Game {
 	public SpriteBatch batch;
 
 	// Random instance
-	public Random rand = new Random();
+	public com.usp.corrida.utils.Random rand = new Random();
 
 	// Screens
-	TitleScreen titleScreen;
-	GameScreen gameScreen;
+	public com.usp.corrida.screens.TitleScreen titleScreen;
+	public GameScreen gameScreen;
 
 	// Game instance
-	Game game;
+	public com.usp.corrida.logic.Game game;
 
 	// Font
-	BitmapFont font;
+	public BitmapFont font;
 
 	// Camera
-	OrthographicCamera camera;
+	private OrthographicCamera camera;
 
 	// Debug
 	Boolean showFPS = true;

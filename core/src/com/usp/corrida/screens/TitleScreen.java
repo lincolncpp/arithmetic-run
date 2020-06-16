@@ -1,17 +1,17 @@
-package com.usp.corrida;
+package com.usp.corrida.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
+import com.usp.corrida.Core;
+import com.usp.corrida.screens.GameScreen;
 
-public class GameScreen extends ScreenAdapter {
+public class TitleScreen extends ScreenAdapter {
 
     // Core instance
     Core core;
 
-    float x = 0;
-
-    public GameScreen(Core core){
+    public TitleScreen(Core core){
         this.core = core;
     }
 
@@ -25,6 +25,7 @@ public class GameScreen extends ScreenAdapter {
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean touchDown (int x, int y, int pointer, int button) {
+                core.setScreen(new GameScreen(core));
                 return true;
             }
         });
@@ -43,11 +44,10 @@ public class GameScreen extends ScreenAdapter {
     public void render (float delta) {
         loop(delta);
 
-        x += delta*30;
-
         // Draw background
-        core.game.render(delta, x);
+        core.game.render(delta, 0);
 
-        core.font.draw(core.batch, "PONTOS: 0", 10, core.height-11);
+        core.font.draw(core.batch, "RECORDE: 9.632", 10, core.height-11);
     }
+
 }
