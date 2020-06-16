@@ -37,7 +37,7 @@ public class Core extends com.badlogic.gdx.Game {
 	private OrthographicCamera camera;
 
 	// Debug
-	Boolean showFPS = true;
+	Boolean showFPS = false;
 
 	@Override
 	public void create () {
