@@ -1,6 +1,7 @@
 # Corrida Aritmetica
 
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/lincolncpp/corrida_aritmetica/Java%20CI%20with%20Gradle)
+[![Documentation Status](https://readthedocs.org/projects/corrida-aritmetica/badge/?version=latest)](https://corrida-aritmetica.readthedocs.io/en/latest/?badge=latest)
 [![codecov](https://codecov.io/gh/lincolncpp/corrida_aritmetica/branch/master/graph/badge.svg)](https://codecov.io/gh/lincolncpp/corrida_aritmetica)
 [![StackShare](http://img.shields.io/badge/tech-stack-0690fa.svg?style=flat)](https://stackshare.io/lincolncpp/corrida-aritmetica)
 
