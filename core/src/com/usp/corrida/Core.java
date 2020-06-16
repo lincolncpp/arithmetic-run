@@ -21,14 +21,14 @@ public class Core extends com.badlogic.gdx.Game {
 	public SpriteBatch batch;
 
 	// Random instance
-	public com.usp.corrida.utils.Random rand = new Random();
+	public Random rand = new Random();
 
 	// Screens
-	public com.usp.corrida.screens.TitleScreen titleScreen;
+	public TitleScreen titleScreen;
 	public GameScreen gameScreen;
 
 	// Game instance
-	public com.usp.corrida.logic.Game game;
+	public Game game;
 
 	// Font
 	public BitmapFont font;
