@@ -12,13 +12,10 @@ import com.usp.corrida.screens.TitleScreen;
 import com.usp.corrida.utils.Random;
 
 /**
- * Lorem ipsum dolor sit amet
+ * Classe principal do jogo.
  */
 public class Core extends com.badlogic.gdx.Game {
 
-	/**
-	 * Variable description
-	 */
 	public float width;
 	public float height;
 
@@ -44,6 +41,9 @@ public class Core extends com.badlogic.gdx.Game {
 	// Debug
 	Boolean showFPS = false;
 
+	/**
+	 * Faz as primeiras configurações do programa.
+	 */
 	@Override
 	public void create () {
 		// Camera building
@@ -70,6 +70,9 @@ public class Core extends com.badlogic.gdx.Game {
 		setScreen(titleScreen);
 	}
 
+	/**
+	 * Cuida de toda a renderização do jogo.
+	 */
 	@Override
 	public void render () {
 		Gdx.gl.glClearColor(69/255f, 186/255f, 230/255f, 1);
@@ -90,7 +93,10 @@ public class Core extends com.badlogic.gdx.Game {
 
 		batch.end();
 	}
-	
+
+	/**
+	 * Descarrega todos os recursos.
+	 */
 	@Override
 	public void dispose () {
 		batch.dispose();
