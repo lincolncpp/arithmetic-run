@@ -11,6 +11,9 @@ import com.usp.corrida.screens.GameScreen;
 import com.usp.corrida.screens.TitleScreen;
 import com.usp.corrida.utils.Random;
 
+/**
+ * Lorem ipsum dolor sit amet
+ */
 public class Core extends com.badlogic.gdx.Game {
 
 	// Resolution variables
