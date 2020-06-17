@@ -63,7 +63,10 @@ public class TitleScreen extends ScreenAdapter {
         // Draw background
         core.game.render(delta, 0);
 
-        core.font.draw(core.batch, "RECORDE: 9.632", 10, core.height-11);
+        core.res.font.draw(core.batch, "RECORDE: 9.632", 10, core.height-11);
+
+//        core.font.draw(core.batch, "Toque para jogar!", )
+        core.res.font.draw(core.batch, "Toque para jogar!", 0, core.height/2, core.width, 1, true);
     }
 
     /**

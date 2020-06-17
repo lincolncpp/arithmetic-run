@@ -23,7 +23,6 @@ public class Game {
     TextureRegion texBgCloud;
     TextureRegion texBgMountain;
     TextureRegion texBgTop;
-    TextureRegion texBgBlack;
 
     TextureRegion texTile1;
     TextureRegion texTile2;
@@ -52,7 +51,6 @@ public class Game {
         texBgCloud = new TextureRegion(texBackground, 16, 0, 160, 32);
         texBgMountain = new TextureRegion(texBackground, 16, 32, 160, 48);
         texBgTop = new TextureRegion(texBackground, 0, 0, 16, 16);
-        texBgBlack = new TextureRegion(texBackground,0, 32, 16, 16);
 
         texTile1 = new TextureRegion(texTerrain, 16, 0, 16, 16);
         texTile2 = new TextureRegion(texTerrain, 16, 16, 16, 16);
@@ -63,10 +61,10 @@ public class Game {
             cloudPositionY[i] = core.rand.getIntRand(100,(int)core.height-64);
         }
 
-        charMain = new Character(core, 1);
+        charMain = new Character(core, 0);
         charMain.setPos(32, 32);
 
-        npc1 = new NPC(core, 1, 1);
+        npc1 = new NPC(core, 0, 1);
         npc1.setPos(32*10, 32);
         npc1.setHorizontalFlip(true);
     }
@@ -83,7 +81,7 @@ public class Game {
         for(int i = 0;i < cnt1;i++){
             core.batch.draw(texBgTop, 16*i, core.height-48);
         }
-        core.batch.draw(texBgBlack, 0, core.height-32, core.width, 32);
+        core.batch.draw(core.res.texBlack, 0, core.height-32, core.width, 32);
 
         // Drawing background clouds
         int cnt3 = ((int)core.width-1)/160+1;

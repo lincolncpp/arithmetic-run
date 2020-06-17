@@ -32,8 +32,8 @@ public class Core extends com.badlogic.gdx.Game {
 	// Game instance
 	public Game game;
 
-	// Font
-	public BitmapFont font;
+	// Shared resources
+	public Resources res;
 
 	// Camera
 	private OrthographicCamera camera;
@@ -53,15 +53,15 @@ public class Core extends com.badlogic.gdx.Game {
 		camera.position.set(width/2f, height/2f, 0);
 		camera.update();
 
+		// Resouces loading
+		res = new Resources();
+
 		// Batch building
 		batch = new SpriteBatch();
 
 		// Screen building
 		titleScreen = new TitleScreen(this);
 		gameScreen = new GameScreen(this);
-
-		// Font building
-		font = new BitmapFont(Gdx.files.internal("font/clacon.fnt"));
 
 		// Background building
 		game = new Game(this);
@@ -88,7 +88,7 @@ public class Core extends com.badlogic.gdx.Game {
 
 		// Debug
 		if (showFPS){
-			font.draw(batch, "FPS: "+Gdx.graphics.getFramesPerSecond(), 10, 20);
+			res.font.draw(batch, "FPS: "+Gdx.graphics.getFramesPerSecond(), 10, 20);
 		}
 
 		batch.end();
@@ -102,12 +102,11 @@ public class Core extends com.badlogic.gdx.Game {
 		batch.dispose();
 
 		setScreen(null);
-
 		titleScreen.dispose();
 		gameScreen.dispose();
 
-		font.dispose();
-
 		game.dispose();
+
+		res.dispose();
 	}
 }

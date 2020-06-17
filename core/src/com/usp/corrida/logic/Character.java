@@ -3,6 +3,7 @@ package com.usp.corrida.logic;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.usp.corrida.Core;
+import com.usp.corrida.Resources;
 
 import javax.swing.text.StyledEditorKit;
 
@@ -25,9 +26,7 @@ public class Character {
     float posX = 0;
     float posY = 0;
     Boolean horizontalFlip = false;
-
-    // Texture
-    Texture texSprite;
+    int spriteID = 0;
 
     /**
      * @param core Instancia do core do jogo
@@ -35,8 +34,9 @@ public class Character {
      */
     public Character(Core core, int spriteID){
         this.core = core;
+        this.spriteID = spriteID;
 
-        texSprite = new Texture(Gdx.files.internal("sprites/" + spriteID + ".png"));
+
     }
 
     /**
@@ -97,13 +97,14 @@ public class Character {
     public void render(float delta){
         update(delta);
 
-        core.batch.draw(texSprite, posX, posY, 32, 32, frame*32, 0, 32, 32, horizontalFlip, false);
+        core.batch.draw(core.res.texSprite[spriteID], posX, posY, 32, 32, frame*32, 0, 32, 32, horizontalFlip, false);
     }
 
     /**
      * Descarrega todos os recursos
      */
     public void dispose(){
-        texSprite.dispose();
+
+
     }
 }

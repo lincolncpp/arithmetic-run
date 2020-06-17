@@ -71,7 +71,7 @@ public class GameScreen extends ScreenAdapter {
         // Draw background
         core.game.render(delta, x);
 
-        core.font.draw(core.batch, "PONTOS: 0", 10, core.height-11);
+        core.res.font.draw(core.batch, "PONTOS: 0", 10, core.height-11);
     }
 
     /**
