@@ -4,6 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.usp.corrida.Core;
 
+/**
+ * Classe responsável pela renderização dos NPCs
+ */
 public class NPC extends Character{
 
     // Arithmetic expression level
