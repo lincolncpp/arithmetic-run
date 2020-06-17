@@ -16,7 +16,9 @@ import com.usp.corrida.utils.Random;
  */
 public class Core extends com.badlogic.gdx.Game {
 
-	// Resolution variables
+	/**
+	 * Variable description
+	 */
 	public float width;
 	public float height;
 

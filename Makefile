@@ -4,4 +4,4 @@ SRC=core/src/
 
 doc:
 	rm -rf docs/
-	javadoc -d $(DEST) -sourcepath $(SRC) $(PACKAGE) $(PACKAGE).logic $(PACKAGE).screens $(PACKAGE).utils
+	javadoc -noindex -notree -nohelp -nodeprecated -d $(DEST) -sourcepath $(SRC) $(PACKAGE) $(PACKAGE).logic $(PACKAGE).screens $(PACKAGE).utils
