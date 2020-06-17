@@ -55,6 +55,13 @@ public class Character {
     }
 
     /**
+     * Define se o personagem está em movimento ou não
+     */
+    public void setIsMoving(Boolean moving){
+        isMoving = moving;
+    }
+
+    /**
      * @return Posição X
      */
     public float getX(){

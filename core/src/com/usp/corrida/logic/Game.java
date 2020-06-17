@@ -34,7 +34,7 @@ public class Game {
     float[] cloudPositionY = new float[MAXCLOUDS];
 
     // Character
-    Character charMain;
+    public Character charMain;
 
     /**
      * @param core Instancia do core do jogo
@@ -62,7 +62,6 @@ public class Game {
 
         charMain = new Character(core, 1);
         charMain.setPos(32, 32);
-        charMain.isMoving = true;
     }
 
     /**

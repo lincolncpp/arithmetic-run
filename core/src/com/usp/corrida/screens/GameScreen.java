@@ -34,6 +34,9 @@ public class GameScreen extends ScreenAdapter {
                 return true;
             }
         });
+
+        // Set character moving
+        core.game.charMain.setIsMoving(true);
     }
 
     /**
@@ -42,6 +45,9 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void hide(){
         Gdx.input.setInputProcessor(null);
+
+        // Set character moving
+        core.game.charMain.setIsMoving(false);
     }
 
     /**
