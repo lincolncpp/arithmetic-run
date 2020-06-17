@@ -42,7 +42,7 @@ public class Core extends com.badlogic.gdx.Game {
 	Boolean showFPS = false;
 
 	/**
-	 * Faz as primeiras configurações do programa.
+	 * Faz as primeiras configurações do programa
 	 */
 	@Override
 	public void create () {
@@ -71,7 +71,7 @@ public class Core extends com.badlogic.gdx.Game {
 	}
 
 	/**
-	 * Cuida de toda a renderização do jogo.
+	 * Cuida de toda a renderização do jogo
 	 */
 	@Override
 	public void render () {
@@ -95,7 +95,7 @@ public class Core extends com.badlogic.gdx.Game {
 	}
 
 	/**
-	 * Descarrega todos os recursos.
+	 * Descarrega todos os recursos
 	 */
 	@Override
 	public void dispose () {

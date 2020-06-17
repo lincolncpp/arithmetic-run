@@ -2,10 +2,13 @@ package com.usp.corrida.utils;
 
 import java.util.Calendar;
 
+/**
+ * Cuida das funções aleatórias
+ */
 public class Random {
-    private long p = 2147483648L;
-    private long m = 843314861L;
-    private long a = 453816693L;
+    private final long p = 2147483648L;
+    private final long m = 843314861L;
+    private final long a = 453816693L;
 
     private long xi = 0;
 

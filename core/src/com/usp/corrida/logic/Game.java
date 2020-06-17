@@ -6,6 +6,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.usp.corrida.Core;
 import com.usp.corrida.utils.Utils;
 
+/**
+ * Classe responsável pela renderização do cenário
+ */
 public class Game {
 
     // Core instance
@@ -31,8 +34,11 @@ public class Game {
     float[] cloudPositionY = new float[MAXCLOUDS];
 
     // Character
-    com.usp.corrida.logic.Character charMain;
+    Character charMain;
 
+    /**
+     * @param core Instancia do core do jogo
+     */
     public Game(Core core){
         this.core = core;
 
@@ -54,11 +60,16 @@ public class Game {
             cloudPositionY[i] = core.rand.getIntRand(100,(int)core.height-64);
         }
 
-        charMain = new Character(core, "sprites/1.png");
+        charMain = new Character(core, 1);
         charMain.setPos(32, 32);
         charMain.isMoving = true;
     }
 
+    /**
+     * Renderiza todo o cenário do jogo
+     * @param delta Variação de tempo entre a chamada atual e a última chamada
+     * @param x Deslocamento da coordenada x do cenário
+     */
     public void render(float delta, float x){
 
         // Drawing top effect
@@ -99,6 +110,9 @@ public class Game {
         charMain.render(delta);
     }
 
+    /**
+     * Descarrega todos os recursos
+     */
     public void dispose(){
         texBackground.dispose();
         texTerrain.dispose();

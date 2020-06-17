@@ -6,6 +6,9 @@ import com.usp.corrida.Core;
 
 import javax.swing.text.StyledEditorKit;
 
+/**
+ * Classe responsável pela renderização dos personagens
+ */
 public class Character {
 
     // Configuration constants
@@ -26,29 +29,49 @@ public class Character {
     // Texture
     Texture texSprite;
 
-    public Character(Core core, String spritePath){
+    /**
+     * @param core Instancia do core do jogo
+     * @param spriteID Identificador do sprite
+     */
+    public Character(Core core, int spriteID){
         this.core = core;
 
-        texSprite = new Texture(Gdx.files.internal(spritePath));
+        texSprite = new Texture(Gdx.files.internal("sprites/" + spriteID + ".png"));
     }
 
+    /**
+     * Define a posição coordenada do personagem na tela
+     */
     public void setPos(float x, float y){
         posX = x;
         posY = y;
     }
 
+    /**
+     * Define o flip horizontal do sprite
+     */
     public void setHorizontalFlip(Boolean flip){
         horizontalFlip = flip;
     }
 
+    /**
+     * @return Posição X
+     */
     public float getX(){
         return posX;
     }
 
+    /**
+     * @return Posição Y
+     */
     public float getY(){
         return posY;
     }
 
+    /**
+     * Essa função é chamada antes da função render. É utilizada para atualizar os frames de movimento
+     * @param delta Variação de tempo entre a chamada atual e a última chamada
+     */
     public void update(float delta){
         if (isMoving){
             if (System.currentTimeMillis() > tickFrame){
@@ -60,12 +83,19 @@ public class Character {
         else frame = 0;
     }
 
+    /**
+     * Renderiza o sprite do personagem
+     * @param delta Variação de tempo entre a chamada atual e a última chamada
+     */
     public void render(float delta){
         update(delta);
 
         core.batch.draw(texSprite, posX, posY, 32, 32, frame*32, 0, 32, 32, horizontalFlip, false);
     }
 
+    /**
+     * Descarrega todos os recursos
+     */
     public void dispose(){
         texSprite.dispose();
     }
