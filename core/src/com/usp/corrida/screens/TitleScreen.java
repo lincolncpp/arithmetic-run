@@ -3,6 +3,7 @@ package com.usp.corrida.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Texture;
 import com.usp.corrida.Core;
 import com.usp.corrida.screens.GameScreen;
 
@@ -14,11 +15,16 @@ public class TitleScreen extends ScreenAdapter {
     // Core instance
     Core core;
 
+    // Texture
+    Texture texHelpButton;
+
     /**
      * @param core Instancia do core do jogo
      */
     public TitleScreen(Core core){
         this.core = core;
+
+        texHelpButton = new Texture(Gdx.files.internal("help.png"));
     }
 
     /**
@@ -60,13 +66,21 @@ public class TitleScreen extends ScreenAdapter {
     public void render (float delta) {
         update(delta);
 
-        // Draw background
+        // Draw game in background
         core.game.render(delta, 0);
 
-        core.res.font.draw(core.batch, "RECORDE: 9.632", 10, core.height-11);
+        // Draw record text
+        core.res.font.draw(core.batch, "RECORDE: 0", 10, core.height-11);
 
-//        core.font.draw(core.batch, "Toque para jogar!", )
-        core.res.font.draw(core.batch, "Toque para jogar!", 0, core.height/2, core.width, 1, true);
+        // Draw "Touch to play"
+        float multiplier = ((float)Math.sin((double)System.currentTimeMillis()/(double)300)+1)/2f;
+        core.batch.setColor(1f, 1f, 1f, 0.3f+0.3f*multiplier);
+        core.batch.draw(core.res.texBlack, 0, core.height/2-15, core.width, 30);
+        core.batch.setColor(1, 1, 1, 1);
+        core.res.font.draw(core.batch, "TOQUE PARA JOGAR!", 0, core.height/2+core.res.font.getCapHeight()/2, core.width, 1, true);
+
+        // Draw help button
+        core.batch.draw(texHelpButton, core.width-16-8, core.height-16-8);
     }
 
     /**
@@ -74,6 +88,7 @@ public class TitleScreen extends ScreenAdapter {
      */
     @Override
     public void dispose(){
+        texHelpButton.dispose();
     }
 
 }
