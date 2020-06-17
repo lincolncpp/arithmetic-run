@@ -36,6 +36,9 @@ public class Game {
     // Character
     public Character charMain;
 
+    // NPC
+    public NPC npc1;
+
     /**
      * @param core Instancia do core do jogo
      */
@@ -62,6 +65,10 @@ public class Game {
 
         charMain = new Character(core, 1);
         charMain.setPos(32, 32);
+
+        npc1 = new NPC(core, 1, 1);
+        npc1.setPos(32*10, 32);
+        npc1.setHorizontalFlip(true);
     }
 
     /**
@@ -107,6 +114,7 @@ public class Game {
         }
 
         charMain.render(delta);
+        npc1.render(delta);
     }
 
     /**
