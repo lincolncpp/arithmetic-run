@@ -18,9 +18,7 @@ public class GameScreen extends ScreenAdapter {
     // Texture
     Texture texLife;
 
-    // Game variables
-    int life = 3;
-
+    // Screen offset
     float x = 0;
 
     /**
@@ -47,6 +45,7 @@ public class GameScreen extends ScreenAdapter {
 
         // Set character moving
         core.game.charMain.setIsMoving(true);
+        core.game.charMain.setText("1?");
     }
 
     /**
@@ -58,6 +57,7 @@ public class GameScreen extends ScreenAdapter {
 
         // Set character moving
         core.game.charMain.setIsMoving(false);
+        core.game.charMain.setText("");
     }
 
     /**
@@ -83,10 +83,10 @@ public class GameScreen extends ScreenAdapter {
 
         // Drawing life
         for(int i = 0;i < 3;i++){
-            core.batch.draw(texLife,10+20*i, core.height-32/2f-16/2f, (i+1>life)?16:0, 0, 16, 16);
+            core.batch.draw(texLife,10+20*i, core.height-32/2f-16/2f, (i+1>core.game.life)?16:0, 0, 16, 16);
         }
 
-
+        // Drawing score
         core.res.font.draw(core.batch, "PONTOS: 0", 10+20*2+16+10, core.height-32/2f+core.res.font.getCapHeight()/2f);
     }
 

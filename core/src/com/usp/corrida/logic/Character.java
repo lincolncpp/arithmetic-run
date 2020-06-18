@@ -1,11 +1,6 @@
 package com.usp.corrida.logic;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.usp.corrida.Core;
-import com.usp.corrida.Resources;
-
-import javax.swing.text.StyledEditorKit;
 
 /**
  * Classe responsável pela renderização dos personagens
@@ -13,7 +8,7 @@ import javax.swing.text.StyledEditorKit;
 public class Character {
 
     // Configuration constants
-    public static final int FRAME_INTERVAL = 100;
+    public static final int FRAME_INTERVAL = 150;
 
     // Core instance
     Core core;
@@ -26,6 +21,8 @@ public class Character {
     float posY = 0;
     Boolean horizontalFlip = false;
     int spriteID = 0;
+
+    String text = "";
 
     /**
      * @param core Instancia do core do jogo
@@ -42,6 +39,13 @@ public class Character {
     public void setSprite(int spriteID){
         this.frame = 0;
         this.spriteID = spriteID;
+    }
+
+    /**
+     * Define a mensagem no balão de fala do personagem
+     */
+    public void setText(String text){
+        this.text = text;
     }
 
     /**
@@ -120,6 +124,16 @@ public class Character {
         update(delta, offsetX);
 
         core.batch.draw(core.res.texSprite[spriteID], posX-offsetX, posY, core.res.SPRITE_WIDTH[spriteID], core.res.SPRITE_HEIGHT[spriteID], frame*core.res.SPRITE_WIDTH[spriteID], 0, core.res.SPRITE_WIDTH[spriteID], core.res.SPRITE_HEIGHT[spriteID], horizontalFlip, false);
+
+        if (text.length() > 0){
+            core.batch.setColor(1, 1, 1, 0.8f);
+            core.batch.draw(core.res.texTextbox, getX()+10 -offsetX, getY()+20);
+            core.batch.setColor(1, 1, 1, 1);
+
+            core.res.font.setColor(0, 0, 0, 1);
+            core.res.font.draw(core.batch, text, getX()+10-offsetX, getY()+20+9+23f/2+core.res.font.getCapHeight()/2, 64, 1, false);
+            core.res.font.setColor(1, 1, 1, 1);
+        }
     }
 
     /**

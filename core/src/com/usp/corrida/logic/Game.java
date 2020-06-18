@@ -41,11 +41,14 @@ public class Game {
 
     // NPCs
     public static final int MAX_NPC = 3;
-    public NPC[] npc = new NPC[MAX_NPC];
+    public Character[] npc = new Character[MAX_NPC];
     float lastNPCX = 0;
 
     // Character
     public Character charMain;
+
+    // Game variables
+    public int life = 3;
 
     /**
      * Carrega recursos gráficos do jogo
@@ -97,7 +100,7 @@ public class Game {
      */
     public void setupNPCs(){
         for(int i = 0;i < MAX_NPC;i++) {
-            npc[i] = new NPC(core, 0);
+            npc[i] = new Character(core, 0);
             npc[i].setIsMoving(true);
             npc[i].setX(-10000);
         }
