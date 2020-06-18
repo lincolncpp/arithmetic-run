@@ -3,6 +3,7 @@ package com.usp.corrida.logic;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 import com.usp.corrida.Core;
 import com.usp.corrida.utils.Utils;
 
@@ -10,8 +11,6 @@ import com.usp.corrida.utils.Utils;
  * Classe responsável pela renderização do cenário
  */
 public class Game {
-
-    public static final float NPC_SPEED = 1.3f;
 
     // Core instance
     Core core;
@@ -32,8 +31,7 @@ public class Game {
 
     // Clouds
     public static final int MAX_CLOUD = 5;
-    float[] cloudPositionX = new float[MAX_CLOUD];
-    float[] cloudPositionY = new float[MAX_CLOUD];
+    Vector2[] cloudPosition = new Vector2[MAX_CLOUD];
 
     // Trees
     public static final int MAX_TREE = 10;
@@ -72,8 +70,9 @@ public class Game {
      */
     public void setupClouds(){
         for(int i = 0; i < MAX_CLOUD; i++){
-            cloudPositionX[i] = core.rand.getIntRand(-16, (int)core.width);
-            cloudPositionY[i] = core.rand.getIntRand(100,(int)core.height-64);
+            cloudPosition[i] = new Vector2(0, 0);
+            cloudPosition[i].x = core.rand.getIntRand(-16, (int)core.width);
+            cloudPosition[i].y = core.rand.getIntRand(100,(int)core.height-64);
         }
     }
 
@@ -112,7 +111,7 @@ public class Game {
      */
     public void updateNPCs(float offsetX){
         for(int i = 0;i < MAX_NPC;i++) {
-            float realX = npc[i].getX()-offsetX*NPC_SPEED;
+            float realX = npc[i].getX()-offsetX;
             if (realX < -100){
                 int sid = core.rand.getIntRand(1, 9);
 
@@ -120,12 +119,14 @@ public class Game {
                 if (sid == 7) npc[i].setY(core.rand.getIntRand(32, (int)core.height-100));
                 else npc[i].setY(32);
 
-                float x1 = offsetX*NPC_SPEED + core.width + core.rand.getIntRand(0, (int)(core.width/2f));
+                float x1 = offsetX + core.width + core.rand.getIntRand(0, (int)(core.width/2f));
                 float x2 = lastNPCX + core.rand.getIntRand(100, (int)(core.width/2f));
                 float newX = Math.max(x1, x2);
                 lastNPCX = newX;
 
                 npc[i].setX(newX);
+
+                npc[i].setText(""+(i+1));
             }
         }
     }
@@ -198,7 +199,7 @@ public class Game {
 
         // Drawing clouds
         for(int i = 0; i < MAX_CLOUD; i++){
-            core.batch.draw(texCloud, cloudPositionX[i], cloudPositionY[i]);
+            core.batch.draw(texCloud, cloudPosition[i].x, cloudPosition[i].y);
         }
 
         // Drawing trees
@@ -208,7 +209,7 @@ public class Game {
 
         // Drawing NPCs
         for(int i = 0;i < MAX_NPC;i++){
-            npc[i].render(delta, offsetX*NPC_SPEED);
+            npc[i].render(delta, offsetX);
         }
 
         charMain.render(delta, 0);

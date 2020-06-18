@@ -1,6 +1,10 @@
 package com.usp.corrida.logic;
 
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.utils.Array;
 import com.usp.corrida.Core;
+import com.usp.corrida.utils.Utils;
 
 /**
  * Classe responsável pela renderização dos personagens
@@ -8,7 +12,7 @@ import com.usp.corrida.Core;
 public class Character {
 
     // Configuration constants
-    public static final int FRAME_INTERVAL = 150;
+    public static final int FRAME_INTERVAL = 120;
 
     // Core instance
     Core core;
@@ -17,12 +21,13 @@ public class Character {
     Boolean isMoving = false;
     long tickFrame = 0;
     int frame = 0;
-    float posX = 0;
-    float posY = 0;
+
+    Vector2 position;
     Boolean horizontalFlip = false;
     int spriteID = 0;
 
     String text = "";
+    int value = 0;
 
     /**
      * @param core Instancia do core do jogo
@@ -31,6 +36,8 @@ public class Character {
     public Character(Core core, int spriteID){
         this.core = core;
         this.spriteID = spriteID;
+
+        position = new Vector2(0, 0);
     }
 
     /**
@@ -49,39 +56,52 @@ public class Character {
     }
 
     /**
+     * Define o valor associado ao personagem
+     */
+    public void setValue(int value){
+        this.value = value;
+    }
+
+    /**
+     * @return valor associado ao personagem
+     */
+    public int getValue(){
+        return value;
+    }
+
+    /**
      * Define a posição coordenada do personagem na tela
      */
     public void setPos(float x, float y){
-        posX = x;
-        posY = y;
+        position.set(x, y);
     }
 
     /**
      * Define a posição X do personagem
      */
     public void setX(float x){
-        posX = x;
+        position.x = x;
     }
 
     /**
      * Define a posição Y do personagem
      */
     public void setY(float y){
-        posY = y;
+        position.y = y;
     }
 
     /**
      * @return Posição X
      */
     public float getX(){
-        return posX;
+        return position.x;
     }
 
     /**
      * @return Posição Y
      */
     public float getY(){
-        return posY;
+        return position.y;
     }
 
     /**
@@ -98,6 +118,30 @@ public class Character {
         isMoving = moving;
     }
 
+    /**
+     *
+     * @param x coordenada x do ponto clicado
+     * @param y coordenada y do ponto clicado
+     * @param offsetX Deslocamento da coordenada x do cenário
+     * @return Retorna se o personagem foi tocado ou não
+     */
+    public Boolean isTouched(int x, int y, float offsetX){
+        float textX = getX()+10;
+        float textY = getY()+20;
+        float textWidth = 64;
+        float textHeight = 32;
+
+        Vector2 point = new Vector2(x+offsetX, y);
+
+        Array<Vector2> rect = new Array<Vector2>();
+        rect.add(new Vector2(getX(), getY()));
+        rect.add(new Vector2(textX, textY+textHeight));
+        rect.add(new Vector2(textX+textWidth, textY+textHeight));
+        rect.add(new Vector2(textX+textWidth, textY));
+        rect.add(new Vector2(getX()+core.res.SPRITE_WIDTH[spriteID], getY()));
+
+        return Intersector.isPointInPolygon(rect, point);
+    }
 
     /**
      * Essa função é chamada antes da função render. É utilizada para atualizar os frames de movimento
@@ -123,15 +167,21 @@ public class Character {
     public void render(float delta, float offsetX){
         update(delta, offsetX);
 
-        core.batch.draw(core.res.texSprite[spriteID], posX-offsetX, posY, core.res.SPRITE_WIDTH[spriteID], core.res.SPRITE_HEIGHT[spriteID], frame*core.res.SPRITE_WIDTH[spriteID], 0, core.res.SPRITE_WIDTH[spriteID], core.res.SPRITE_HEIGHT[spriteID], horizontalFlip, false);
+        offsetX = Utils.fixFloat(offsetX);
+
+        Vector2 fixedPosition = new Vector2(getX(), getY());
+        fixedPosition.x = Utils.fixFloat(fixedPosition.x);
+        fixedPosition.y = Utils.fixFloat(fixedPosition.y);
+
+        core.batch.draw(core.res.texSprite[spriteID], fixedPosition.x-offsetX, fixedPosition.y, core.res.SPRITE_WIDTH[spriteID], core.res.SPRITE_HEIGHT[spriteID], frame*core.res.SPRITE_WIDTH[spriteID], 0, core.res.SPRITE_WIDTH[spriteID], core.res.SPRITE_HEIGHT[spriteID], horizontalFlip, false);
 
         if (text.length() > 0){
             core.batch.setColor(1, 1, 1, 0.8f);
-            core.batch.draw(core.res.texTextbox, getX()+10 -offsetX, getY()+20);
+            core.batch.draw(core.res.texTextbox, fixedPosition.x+10 -offsetX, fixedPosition.y+20);
             core.batch.setColor(1, 1, 1, 1);
 
             core.res.font.setColor(0, 0, 0, 1);
-            core.res.font.draw(core.batch, text, getX()+10-offsetX, getY()+20+9+23f/2+core.res.font.getCapHeight()/2, 64, 1, false);
+            core.res.font.draw(core.batch, text, fixedPosition.x+10-offsetX, fixedPosition.y+20+9+23f/2+core.res.font.getCapHeight()/2, 64, 1, false);
             core.res.font.setColor(1, 1, 1, 1);
         }
     }
