@@ -9,33 +9,36 @@ import com.usp.corrida.Core;
  */
 public class NPC extends Character{
 
-    // Arithmetic expression level
-    int nivel;
-
-    // Texture
-    Texture texTextbox;
-
     /**
      * @param core Instancia do core do jogo
      * @param spriteID Identificador do sprite
-     * @param nivel Nivel da expressão aritmética a ser gerada
      */
-    public NPC(Core core, int spriteID, int nivel) {
+    public NPC(Core core, int spriteID) {
         super(core, spriteID);
+    }
 
-        this.nivel = nivel;
+    /**
+     * Essa função é chamada antes da função render. É utilizada para atualizar tudo antes da renderização
+     * @param delta Variação de tempo entre a chamada atual e a última chamada
+     * @param offsetX Deslocamento da coordenada x do cenário
+     */
+    @Override
+    public void update(float delta, float offsetX){
+        super.update(delta, offsetX);
 
-        texTextbox = new Texture(Gdx.files.internal("textbox.png"));
     }
 
     /**
      * Renderiza o sprite do personagem + balão
      * @param delta Variação de tempo entre a chamada atual e a última chamada
+     * @param offsetX Deslocamento da coordenada x do cenário
      */
     @Override
-    public void render(float delta){
-        super.render(delta);
+    public void render(float delta, float offsetX){
+        super.render(delta, offsetX);
 
-        core.batch.draw(texTextbox, getX()+10, getY()+20);
+        core.batch.setColor(1, 1, 1, 0.8f);
+        core.batch.draw(core.res.texTextbox, getX()+10 -offsetX, getY()+20);
+        core.batch.setColor(1, 1, 1, 1);
     }
 }

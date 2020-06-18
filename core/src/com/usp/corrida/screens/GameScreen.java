@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
 import com.usp.corrida.Core;
+import com.usp.corrida.logic.Game;
 
 /**
  * Classe destinada à renderização da tela de jogo

@@ -14,7 +14,6 @@ public class Character {
 
     // Configuration constants
     public static final int FRAME_INTERVAL = 100;
-    public static final int FRAME_COUNT = 4;
 
     // Core instance
     Core core;
@@ -35,8 +34,14 @@ public class Character {
     public Character(Core core, int spriteID){
         this.core = core;
         this.spriteID = spriteID;
+    }
 
-
+    /**
+     * @param spriteID Identificador do sprite
+     */
+    public void setSprite(int spriteID){
+        this.frame = 0;
+        this.spriteID = spriteID;
     }
 
     /**
@@ -48,17 +53,17 @@ public class Character {
     }
 
     /**
-     * Define o flip horizontal do sprite
+     * Define a posição X do personagem
      */
-    public void setHorizontalFlip(Boolean flip){
-        horizontalFlip = flip;
+    public void setX(float x){
+        posX = x;
     }
 
     /**
-     * Define se o personagem está em movimento ou não
+     * Define a posição Y do personagem
      */
-    public void setIsMoving(Boolean moving){
-        isMoving = moving;
+    public void setY(float y){
+        posY = y;
     }
 
     /**
@@ -76,15 +81,31 @@ public class Character {
     }
 
     /**
+     * Define o flip horizontal do sprite
+     */
+    public void setHorizontalFlip(Boolean flip){
+        horizontalFlip = flip;
+    }
+
+    /**
+     * Define se o personagem está em movimento ou não
+     */
+    public void setIsMoving(Boolean moving){
+        isMoving = moving;
+    }
+
+
+    /**
      * Essa função é chamada antes da função render. É utilizada para atualizar os frames de movimento
      * @param delta Variação de tempo entre a chamada atual e a última chamada
+     * @param offsetX Deslocamento da coordenada x do cenário
      */
-    public void update(float delta){
+    public void update(float delta, float offsetX){
         if (isMoving){
             if (System.currentTimeMillis() > tickFrame){
                 tickFrame = System.currentTimeMillis()+FRAME_INTERVAL;
                 frame++;
-                frame %= FRAME_COUNT;
+                frame %= core.res.SPRITE_FRAMES[spriteID];
             }
         }
         else frame = 0;
@@ -93,11 +114,12 @@ public class Character {
     /**
      * Renderiza o sprite do personagem
      * @param delta Variação de tempo entre a chamada atual e a última chamada
+     * @param offsetX Deslocamento da coordenada x do cenário
      */
-    public void render(float delta){
-        update(delta);
+    public void render(float delta, float offsetX){
+        update(delta, offsetX);
 
-        core.batch.draw(core.res.texSprite[spriteID], posX, posY, 32, 32, frame*32, 0, 32, 32, horizontalFlip, false);
+        core.batch.draw(core.res.texSprite[spriteID], posX-offsetX, posY, core.res.SPRITE_WIDTH[spriteID], core.res.SPRITE_HEIGHT[spriteID], frame*core.res.SPRITE_WIDTH[spriteID], 0, core.res.SPRITE_WIDTH[spriteID], core.res.SPRITE_HEIGHT[spriteID], horizontalFlip, false);
     }
 
     /**
