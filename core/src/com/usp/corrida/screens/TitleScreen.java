@@ -25,6 +25,23 @@ public class TitleScreen extends ScreenAdapter {
         this.core = core;
 
         texHelpButton = new Texture(Gdx.files.internal("help.png"));
+
+        resetScreen();
+    }
+
+    /**
+     * Reseta os componentes da tela
+     */
+    public void resetScreen(){
+        // Set character moving
+        core.charPlayer.setIsMoving(false);
+        core.charPlayer.setPos(32, 32);
+        core.charPlayer.setText("");
+        core.charPlayer.setFrameInterval(Character.BASE_FRAME_INTERVAL);
+        core.charPlayer.setFrame(0);
+
+        // Reseting background
+        core.background.resetBackground();
     }
 
     /**
@@ -41,8 +58,7 @@ public class TitleScreen extends ScreenAdapter {
             }
         });
 
-        // Set character moving
-        core.charPlayer.setIsMoving(false);
+        resetScreen();
     }
 
     /**
@@ -76,14 +92,14 @@ public class TitleScreen extends ScreenAdapter {
         core.charPlayer.render(delta, 0);
 
         // Draw record text
-        core.res.font.draw(core.batch, "RECORDE: 0", 10, core.height-32/2f+core.res.font.getCapHeight()/2f);
+        core.res.font20.draw(core.batch, "RECORDE: 0", 10, core.height-32/2f+core.res.font20.getCapHeight()/2f);
 
         // Draw "Touch to play"
         float multiplier = ((float)Math.sin((double)System.currentTimeMillis()/(double)300)+1)/2f;
         core.batch.setColor(1f, 1f, 1f, 0.3f+0.3f*multiplier);
         core.batch.draw(core.res.texBlack, 0, core.height/2-15, core.width, 30);
         core.batch.setColor(1, 1, 1, 1);
-        core.res.font.draw(core.batch, "TOQUE PARA JOGAR!", 0, core.height/2+core.res.font.getCapHeight()/2, core.width, 1, false);
+        core.res.font20.draw(core.batch, "TOQUE PARA JOGAR!", 0, core.height/2+core.res.font20.getCapHeight()/2, core.width, 1, false);
 
         // Draw help button
         core.batch.draw(texHelpButton, core.width-16-8, core.height-16-8);

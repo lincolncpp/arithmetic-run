@@ -4,8 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
-import javax.swing.plaf.TextUI;
-
 /**
  * Classe responsável pelo carregamento de recursos compartilhados
  */
@@ -14,11 +12,13 @@ public class Resources {
     public static final int MAX_SPRITES = 11;
 
     // Shared font
-    public BitmapFont font;
+    public BitmapFont font20;
+    public BitmapFont font32;
 
     // Shared texture
     public Texture texBlack;
     public Texture texTextbox;
+    public Texture texHurt;
 
     // Sprites configuration
     public Texture[] texSprite = new Texture[MAX_SPRITES];
@@ -31,10 +31,12 @@ public class Resources {
      * Faz o carregamento de todos os recursos compartilhados
      */
     public Resources(){
-        font = new BitmapFont(Gdx.files.internal("font/clacon.fnt"));
+        font20 = new BitmapFont(Gdx.files.internal("font/clacon20.fnt"));
+        font32 = new BitmapFont(Gdx.files.internal("font/clacon32.fnt"));
 
         texBlack = new Texture(Gdx.files.internal("black.png"));
         texTextbox = new Texture(Gdx.files.internal("textbox.png"));
+        texHurt = new Texture(Gdx.files.internal("hurt.png"));
 
         // Loading sprites
         for(int i = 0;i < MAX_SPRITES;i++){
@@ -58,9 +60,11 @@ public class Resources {
      * Descarrega todos os recursos
      */
     public void dispose(){
-        font.dispose();
+        font20.dispose();
+        font32.dispose();
         texBlack.dispose();
         texTextbox.dispose();
+        texHurt.dispose();
 
         for(int i = 0;i < MAX_SPRITES;i++) {
             texSprite[i].dispose();

@@ -44,6 +44,13 @@ public class Background {
         this.core = core;
 
         loadResources();
+        resetBackground();
+    }
+
+    /**
+     * Reseta os componentes do cenário
+     */
+    public void resetBackground(){
         setupClouds();
         setupTrees();
     }

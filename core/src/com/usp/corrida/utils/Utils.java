@@ -8,6 +8,8 @@ import com.usp.corrida.Core;
  */
 public class Utils {
 
+    public static final float PI = 3.14159265359f;
+
     /**
      * Corrige a precisão do float para 1 casa decimal
      * @param f número decimal da forma x.xxxxxxx

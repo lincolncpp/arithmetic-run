@@ -11,6 +11,8 @@ import com.usp.corrida.utils.Utils;
  */
 public class Character {
 
+    public static final long BASE_FRAME_INTERVAL = 120;
+
     // Core instance
     Core core;
 
@@ -44,6 +46,27 @@ public class Character {
     public void setSprite(int spriteID){
         this.frame = 0;
         this.spriteID = spriteID;
+    }
+
+    /**
+     * @return Identificador do sprite
+     */
+    public int getSprite(){
+        return spriteID;
+    }
+
+    /**
+     * @param frame frame de animação
+     */
+    public void setFrame(int frame){
+        this.frame = frame;
+    }
+
+    /**
+     * @return Frame atual da animação
+     */
+    public int getFrame(){
+        return frame;
     }
 
     /**
@@ -161,7 +184,6 @@ public class Character {
                 frame %= core.res.SPRITE_FRAMES[spriteID];
             }
         }
-        else frame = 0;
     }
 
     /**
@@ -185,9 +207,9 @@ public class Character {
             core.batch.draw(core.res.texTextbox, fixedPosition.x+10 -offsetX, fixedPosition.y+20);
             core.batch.setColor(1, 1, 1, 1);
 
-            core.res.font.setColor(0, 0, 0, 1);
-            core.res.font.draw(core.batch, text, fixedPosition.x+10-offsetX, fixedPosition.y+20+9+23f/2+core.res.font.getCapHeight()/2, 64, 1, false);
-            core.res.font.setColor(1, 1, 1, 1);
+            core.res.font20.setColor(0, 0, 0, 1);
+            core.res.font20.draw(core.batch, text, fixedPosition.x+10-offsetX, fixedPosition.y+20+9+23f/2+core.res.font20.getCapHeight()/2, 64, 1, false);
+            core.res.font20.setColor(1, 1, 1, 1);
         }
     }
 

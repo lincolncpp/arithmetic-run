@@ -6,7 +6,6 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
 import com.usp.corrida.Core;
-import com.usp.corrida.logic.Background;
 import com.usp.corrida.logic.Character;
 import com.usp.corrida.utils.Utils;
 
@@ -21,6 +20,15 @@ public class GameScreen extends ScreenAdapter {
     // Texture
     Texture texLife;
 
+    // Tick variables
+    public static final long POINTS_EFFECT_INTERVAL = 65;
+    public static final long HURT_INTERVAL = 1500;
+    public static final long GAMEOVER_SLIDE = 1000;
+
+    long tickPoints = 0;
+    long tickHurt = 0;
+    long tickGameOver = 0;
+
     // Screen offset
     float offsetX = 0;
 
@@ -31,7 +39,10 @@ public class GameScreen extends ScreenAdapter {
 
     // Game variables
     int life = 3;
-    int points = 0;
+    long pointsAdd = 0;
+    long points = 0;
+    int challengeValue = 0;
+    Boolean gameOver = false;
 
     /**
      * @param core Instancia do core do jogo
@@ -40,6 +51,81 @@ public class GameScreen extends ScreenAdapter {
         this.core = core;
 
         texLife = new Texture(Gdx.files.internal("life.png"));
+
+        resetScreen();
+    }
+
+    /**
+     * @return nível de dificuldade atual com base na pontuação
+     */
+    public int getLevel(){
+        if (points >= 10000000) return 4;
+        if (points >= 100000) return 3;
+        if (points >= 1000) return 4;
+        return 1;
+    }
+
+    /**
+     * Atualiza o desafio
+     */
+    public void refreshChallenge(){
+        int level = getLevel();
+        if (level == 1) challengeValue = core.rand.getIntRand(11, 100);
+        else if (level == 2) challengeValue = core.rand.getIntRand(101, 1000);
+        else if (level == 3) challengeValue = core.rand.getIntRand(1001, 10000);
+        else if (level == 4) challengeValue = core.rand.getIntRand(10001, 100000);
+
+        core.charPlayer.setText(""+challengeValue);
+    }
+
+    /**
+     * Atualiza a resposta do NPC i
+     */
+    public void updateNPCAnswer(int i){
+        int level = getLevel();
+        if (level == 1){
+            // Only + and -
+            int operation = core.rand.getIntRand(0, 1);
+            int correct = core.rand.getIntRand(1, 10);
+
+            // 60% to pick a correct answer
+            if (correct <= -9) npc[i].setValue(challengeValue);
+            else {
+                npc[i].setValue(core.rand.getIntRand(2, 100));
+                while(npc[i].getValue() == challengeValue) npc[i].setValue(core.rand.getIntRand(2, 100));
+            }
+
+            if (operation == 1){ // + operation
+                int a = core.rand.getIntRand(1, Math.min(10, npc[i].getValue()-1));
+                npc[i].setText(a+"+"+(npc[i].getValue()-a));
+            }
+            else{ // - operation
+                int a = core.rand.getIntRand(1, 10);
+                npc[i].setText((npc[i].getValue()+a)+"-"+a);
+            }
+        }
+    }
+
+    /**
+     * Reseta os componentes da tela
+     */
+    public void resetScreen(){
+        tickPoints = 0;
+        tickHurt = 0;
+        tickGameOver = 0;
+
+        offsetX = 0;
+        lastNPCX = 0;
+
+        life = 3;
+        pointsAdd = 0;
+        points = 0;
+        challengeValue = 0;
+        gameOver = false;
+
+        core.charPlayer.setIsMoving(true);
+
+        refreshChallenge();
 
         setupNPCs();
     }
@@ -50,7 +136,6 @@ public class GameScreen extends ScreenAdapter {
     public void setupNPCs(){
         for(int i = 0;i < MAX_NPC;i++) {
             npc[i] = new Character(core, 0);
-            npc[i].setIsMoving(true);
             npc[i].setX(-10000);
         }
     }
@@ -66,20 +151,41 @@ public class GameScreen extends ScreenAdapter {
             public boolean touchDown (int x, int y, int pointer, int button) {
                 Vector2 fixedCoordinate = Utils.fixTouchPosition(core, x, y);
 
-
-                for(int i = 0; i < MAX_NPC; i++){
-                    if (npc[i].isTouched((int)fixedCoordinate.x, (int)fixedCoordinate.y, offsetX)){
-                        System.out.println("npc " + i + " touched");
-                    }
+                if (gameOver){
+                    core.setScreen(core.titleScreen);
                 }
 
+                if (life > 0){
+                    for(int i = 0; i < MAX_NPC; i++){
+                        if (npc[i].getSprite() == 10) continue;
+
+                        if (npc[i].isTouched((int)fixedCoordinate.x, (int)fixedCoordinate.y, offsetX)){
+                            if (npc[i].getValue() == challengeValue){
+                                pointsAdd += 100;
+                                npc[i].setSprite(10);
+                                npc[i].setText("");
+                            }
+                            else{
+                                life--;
+                                tickHurt = System.currentTimeMillis()+HURT_INTERVAL;
+
+                                if (life == 0){
+                                    core.charPlayer.setFrameInterval(60);
+                                    core.charPlayer.setText("$%!#@");
+
+                                    for(int j = 0;j < MAX_NPC;j++) npc[j].setText("");
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
 
                 return true;
             }
         });
 
-        // Set character moving
-        core.charPlayer.setIsMoving(true);
+        resetScreen();
     }
 
     /**
@@ -110,8 +216,30 @@ public class GameScreen extends ScreenAdapter {
                 lastNPCX = newX;
 
                 npc[i].setX(newX);
+                npc[i].setIsMoving(true);
 
-                npc[i].setText(""+(i+1));
+                updateNPCAnswer(i);
+            }
+
+            // Smoke sprite
+            if (npc[i].getSprite() == 10){
+                if (npc[i].getFrame() == core.res.SPRITE_FRAMES[10]-1) npc[i].setX(-10000);
+            }
+        }
+    }
+
+    /**
+     * Faz a animação do aumento de pontuação
+     */
+    public void updatePoints(){
+        if (System.currentTimeMillis() > tickPoints){
+            tickPoints = System.currentTimeMillis()+POINTS_EFFECT_INTERVAL;
+            for(int i = 60;i >= 0;i--){
+                if ((pointsAdd&(1L<<i)) > 0){
+                    points += (1L<<i);
+                    pointsAdd -= (1L<<i);
+                    break;
+                }
             }
         }
     }
@@ -121,14 +249,55 @@ public class GameScreen extends ScreenAdapter {
      * @param delta Variação de tempo entre a chamada atual e a última chamada
      */
     public void update(float delta){
+
         offsetX += delta*30;
 
         float d = delta*10;
         for(int i = 0; i < MAX_NPC; i++){
+            if (npc[i].getSprite() == 10) continue;
             npc[i].setX(npc[i].getX()-d);
         }
 
+        if (life == 0){
+            float f = delta*150;
+            core.charPlayer.setX(core.charPlayer.getX()+f);
+        }
+
         updateNPCs(offsetX);
+        updatePoints();
+    }
+
+    /**
+     * Desenha um efeito na tela ao perder vida
+     */
+    public void renderHurt(){
+        long time = tickHurt-System.currentTimeMillis();
+        if (time > 0){
+
+            float x = 3.8f-4f*time/(float)HURT_INTERVAL;
+            core.batch.setColor(1, 1, 1, Math.min(1, (float) Math.exp(-x)));
+            core.batch.draw(core.res.texHurt, 0, 0, core.width, core.height);
+            core.batch.setColor(1, 1, 1, 1);
+        }
+    }
+
+    /**
+     * Desenha mensagem de fim de jogo
+     */
+    public void renderGameOver(){
+        if (life == 0 && core.charPlayer.getX() > core.width){
+            if (tickGameOver == 0) tickGameOver = System.currentTimeMillis();
+            long time = System.currentTimeMillis()-tickGameOver;
+            float x = time/(float)GAMEOVER_SLIDE*Utils.PI*Utils.PI;
+            x = Math.min(x, Utils.PI*Utils.PI);
+            float fx = -((float)Math.cos(Math.sqrt(x))+1)/2f*core.height;
+
+            if (time > GAMEOVER_SLIDE) gameOver = true;
+
+            core.batch.draw(core.res.texBlack, 0, fx, core.width, core.height-32);
+            core.res.font32.draw(core.batch, "FIM DE JOGO!", 0, fx+core.height/2f+core.res.font32.getCapHeight()/2, core.width, 1, false);
+            core.res.font20.draw(core.batch, "Novo record!", 0, fx+core.height/2f+core.res.font32.getCapHeight()/2-25, core.width, 1, false);
+        }
     }
 
     /**
@@ -148,14 +317,19 @@ public class GameScreen extends ScreenAdapter {
         }
 
         // Drawing score
-        core.res.font.draw(core.batch, "PONTOS: "+points, 10+20*2+16+10, core.height-32/2f+core.res.font.getCapHeight()/2f);
+        core.res.font20.draw(core.batch, "PONTOS: "+points, 10+20*2+16+10, core.height-32/2f+core.res.font20.getCapHeight()/2f);
 
-        // Drawing NPCs
+        // Drawing characters
         for(int i = 0;i < MAX_NPC;i++){
             npc[i].render(delta, offsetX);
         }
-
         core.charPlayer.render(delta, 0);
+
+        // Drawing hurt
+        renderHurt();
+
+        // Drawing game over
+        renderGameOver();
     }
 
     /**

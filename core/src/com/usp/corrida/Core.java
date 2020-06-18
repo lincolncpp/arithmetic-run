@@ -62,14 +62,15 @@ public class Core extends com.badlogic.gdx.Game {
 		// Batch building
 		batch = new SpriteBatch();
 
-		// Screen building
-		titleScreen = new TitleScreen(this);
-		gameScreen = new GameScreen(this);
-
 		// Background building
 		background = new Background(this);
 
+		// Setting up player
 		setupPlayer();
+
+		// Screen building
+		titleScreen = new TitleScreen(this);
+		gameScreen = new GameScreen(this);
 
 		// Set initial screen
 		setScreen(titleScreen);
@@ -81,7 +82,6 @@ public class Core extends com.badlogic.gdx.Game {
 	public void setupPlayer(){
 		charPlayer = new Character(this, 0);
 		charPlayer.setHorizontalFlip(true);
-		charPlayer.setPos(32, 32);
 	}
 
 	/**
@@ -102,7 +102,7 @@ public class Core extends com.badlogic.gdx.Game {
 
 		// Debug
 		if (showFPS){
-			res.font.draw(batch, "FPS: "+Gdx.graphics.getFramesPerSecond(), 10, 20);
+			res.font20.draw(batch, "FPS: "+Gdx.graphics.getFramesPerSecond(), 10, 20);
 		}
 
 		batch.end();
