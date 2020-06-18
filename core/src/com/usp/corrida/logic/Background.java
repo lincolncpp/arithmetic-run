@@ -10,7 +10,7 @@ import com.usp.corrida.utils.Utils;
 /**
  * Classe responsável pela renderização do cenário
  */
-public class Game {
+public class Background {
 
     // Core instance
     Core core;
@@ -37,16 +37,16 @@ public class Game {
     public static final int MAX_TREE = 10;
     float[] treePositionX = new float[MAX_TREE];
 
-    // NPCs
-    public static final int MAX_NPC = 3;
-    public Character[] npc = new Character[MAX_NPC];
-    float lastNPCX = 0;
+    /**
+     * @param core Instancia do core do jogo
+     */
+    public Background(Core core){
+        this.core = core;
 
-    // Character
-    public Character charMain;
-
-    // Game variables
-    public int life = 3;
+        loadResources();
+        setupClouds();
+        setupTrees();
+    }
 
     /**
      * Carrega recursos gráficos do jogo
@@ -86,65 +86,6 @@ public class Game {
     }
 
     /**
-     * Configuração inicial do jogador
-     */
-    public void setupPlayer(){
-        charMain = new Character(core, 0);
-        charMain.setHorizontalFlip(true);
-        charMain.setPos(32, 32);
-    }
-
-    /**
-     * Configuração inicial dos NPCs
-     */
-    public void setupNPCs(){
-        for(int i = 0;i < MAX_NPC;i++) {
-            npc[i] = new Character(core, 0);
-            npc[i].setIsMoving(true);
-            npc[i].setX(-10000);
-        }
-    }
-
-    /**
-     * Atualiza os NPCs no cenário
-     * @param offsetX Deslocamento da coordenada x do cenário
-     */
-    public void updateNPCs(float offsetX){
-        for(int i = 0;i < MAX_NPC;i++) {
-            float realX = npc[i].getX()-offsetX;
-            if (realX < -100){
-                int sid = core.rand.getIntRand(1, 9);
-
-                npc[i].setSprite(sid);
-                if (sid == 7) npc[i].setY(core.rand.getIntRand(32, (int)core.height-100));
-                else npc[i].setY(32);
-
-                float x1 = offsetX + core.width + core.rand.getIntRand(0, (int)(core.width/2f));
-                float x2 = lastNPCX + core.rand.getIntRand(100, (int)(core.width/2f));
-                float newX = Math.max(x1, x2);
-                lastNPCX = newX;
-
-                npc[i].setX(newX);
-
-                npc[i].setText(""+(i+1));
-            }
-        }
-    }
-
-    /**
-     * @param core Instancia do core do jogo
-     */
-    public Game(Core core){
-        this.core = core;
-
-        loadResources();
-        setupClouds();
-        setupTrees();
-        setupPlayer();
-        setupNPCs();
-    }
-
-    /**
      * Essa função é chamada antes da função render. É utilizada para atualizar tudo antes da renderização
      * @param delta Variação de tempo entre a chamada atual e a última chamada
      * @param offsetX Deslocamento da coordenada x do cenário
@@ -155,8 +96,6 @@ public class Game {
             float posx = treePositionX[i]-offsetX;
             if (posx < -48) treePositionX[i] = offsetX+core.width+core.rand.getIntRand(0, (int)core.width);
         }
-
-        updateNPCs(offsetX);
     }
 
     /**
@@ -206,13 +145,6 @@ public class Game {
         for(int i = 0;i < MAX_TREE;i++){
             core.batch.draw(texTree, treePositionX[i]-offsetX, 32);
         }
-
-        // Drawing NPCs
-        for(int i = 0;i < MAX_NPC;i++){
-            npc[i].render(delta, offsetX);
-        }
-
-        charMain.render(delta, 0);
     }
 
     /**

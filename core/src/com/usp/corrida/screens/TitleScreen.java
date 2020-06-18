@@ -5,7 +5,7 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
 import com.usp.corrida.Core;
-import com.usp.corrida.screens.GameScreen;
+import com.usp.corrida.logic.Character;
 
 /**
  * Classe destinada à renderização da tela de título
@@ -40,6 +40,9 @@ public class TitleScreen extends ScreenAdapter {
                 return true;
             }
         });
+
+        // Set character moving
+        core.charPlayer.setIsMoving(false);
     }
 
     /**
@@ -67,7 +70,10 @@ public class TitleScreen extends ScreenAdapter {
         update(delta);
 
         // Draw game in background
-        core.game.render(delta, 0);
+        core.background.render(delta, 0);
+
+        // Draw player
+        core.charPlayer.render(delta, 0);
 
         // Draw record text
         core.res.font.draw(core.batch, "RECORDE: 0", 10, core.height-32/2f+core.res.font.getCapHeight()/2f);

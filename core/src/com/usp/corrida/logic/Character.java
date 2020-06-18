@@ -11,15 +11,13 @@ import com.usp.corrida.utils.Utils;
  */
 public class Character {
 
-    // Configuration constants
-    public static final int FRAME_INTERVAL = 120;
-
     // Core instance
     Core core;
 
     // Character variables
     Boolean isMoving = false;
     long tickFrame = 0;
+    long frameInterval = 120;
     int frame = 0;
 
     Vector2 position;
@@ -46,6 +44,13 @@ public class Character {
     public void setSprite(int spriteID){
         this.frame = 0;
         this.spriteID = spriteID;
+    }
+
+    /**
+     * @param frameInterval intervalo entre frames da animação do sprite
+     */
+    public void setFrameInterval(long frameInterval){
+        this.frameInterval = frameInterval;
     }
 
     /**
@@ -151,7 +156,7 @@ public class Character {
     public void update(float delta, float offsetX){
         if (isMoving){
             if (System.currentTimeMillis() > tickFrame){
-                tickFrame = System.currentTimeMillis()+FRAME_INTERVAL;
+                tickFrame = System.currentTimeMillis()+frameInterval;
                 frame++;
                 frame %= core.res.SPRITE_FRAMES[spriteID];
             }

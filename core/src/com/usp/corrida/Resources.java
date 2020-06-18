@@ -11,7 +11,7 @@ import javax.swing.plaf.TextUI;
  */
 public class Resources {
 
-    public static final int MAX_SPRITES = 10;
+    public static final int MAX_SPRITES = 11;
 
     // Shared font
     public BitmapFont font;
@@ -51,6 +51,7 @@ public class Resources {
         SPRITE_WIDTH[7] = 16; SPRITE_HEIGHT[7] = 32; SPRITE_FRAMES[7] = 2;
         SPRITE_WIDTH[8] = 32; SPRITE_HEIGHT[8] = 32; SPRITE_FRAMES[8] = 2;
         SPRITE_WIDTH[9] = 16; SPRITE_HEIGHT[9] = 16; SPRITE_FRAMES[9] = 4;
+        SPRITE_WIDTH[10] = 16; SPRITE_HEIGHT[10] = 16; SPRITE_FRAMES[10] = 6;
     }
 
     /**

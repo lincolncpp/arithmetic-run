@@ -4,9 +4,9 @@ package com.usp.corrida;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.usp.corrida.logic.Game;
+import com.usp.corrida.logic.Background;
+import com.usp.corrida.logic.Character;
 import com.usp.corrida.screens.GameScreen;
 import com.usp.corrida.screens.TitleScreen;
 import com.usp.corrida.utils.Random;
@@ -30,7 +30,10 @@ public class Core extends com.badlogic.gdx.Game {
 	public GameScreen gameScreen;
 
 	// Game instance
-	public Game game;
+	public Background background;
+
+	// Character
+	public Character charPlayer;
 
 	// Shared resources
 	public Resources res;
@@ -64,10 +67,21 @@ public class Core extends com.badlogic.gdx.Game {
 		gameScreen = new GameScreen(this);
 
 		// Background building
-		game = new Game(this);
+		background = new Background(this);
+
+		setupPlayer();
 
 		// Set initial screen
 		setScreen(titleScreen);
+	}
+
+	/**
+	 * Configuração inicial do jogador
+	 */
+	public void setupPlayer(){
+		charPlayer = new Character(this, 0);
+		charPlayer.setHorizontalFlip(true);
+		charPlayer.setPos(32, 32);
 	}
 
 	/**
@@ -105,7 +119,9 @@ public class Core extends com.badlogic.gdx.Game {
 		titleScreen.dispose();
 		gameScreen.dispose();
 
-		game.dispose();
+		background.dispose();
+
+		charPlayer.dispose();
 
 		res.dispose();
 	}
