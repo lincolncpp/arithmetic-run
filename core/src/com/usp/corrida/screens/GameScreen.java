@@ -3,6 +3,7 @@ package com.usp.corrida.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Texture;
 import com.usp.corrida.Core;
 import com.usp.corrida.logic.Game;
 
@@ -14,6 +15,12 @@ public class GameScreen extends ScreenAdapter {
     // Core instance
     Core core;
 
+    // Texture
+    Texture texLife;
+
+    // Game variables
+    int life = 3;
+
     float x = 0;
 
     /**
@@ -21,6 +28,8 @@ public class GameScreen extends ScreenAdapter {
      */
     public GameScreen(Core core){
         this.core = core;
+
+        texLife = new Texture(Gdx.files.internal("life.png"));
     }
 
     /**
@@ -72,7 +81,13 @@ public class GameScreen extends ScreenAdapter {
         // Draw background
         core.game.render(delta, x);
 
-        core.res.font.draw(core.batch, "PONTOS: 0", 10, core.height-11);
+        // Drawing life
+        for(int i = 0;i < 3;i++){
+            core.batch.draw(texLife,10+20*i, core.height-32/2f-16/2f, (i+1>life)?16:0, 0, 16, 16);
+        }
+
+
+        core.res.font.draw(core.batch, "PONTOS: 0", 10+20*2+16+10, core.height-32/2f+core.res.font.getCapHeight()/2f);
     }
 
     /**
@@ -80,5 +95,6 @@ public class GameScreen extends ScreenAdapter {
      */
     @Override
     public void dispose(){
+        texLife.dispose();
     }
 }

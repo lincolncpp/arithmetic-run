@@ -10,8 +10,8 @@ public class DesktopLauncher {
 
 		config.title = "Corrida Aritmética - Versão Desktop para testes";
 		config.useGL30 = true;
-		config.height = 540;
-		config.width = 960;
+		config.height = 480;
+		config.width = 760;
 
 		new LwjglApplication(new Core(), config);
 	}

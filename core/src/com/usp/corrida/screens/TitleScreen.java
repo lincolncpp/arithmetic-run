@@ -70,14 +70,14 @@ public class TitleScreen extends ScreenAdapter {
         core.game.render(delta, 0);
 
         // Draw record text
-        core.res.font.draw(core.batch, "RECORDE: 0", 10, core.height-11);
+        core.res.font.draw(core.batch, "RECORDE: 0", 10, core.height-32/2f+core.res.font.getCapHeight()/2f);
 
         // Draw "Touch to play"
         float multiplier = ((float)Math.sin((double)System.currentTimeMillis()/(double)300)+1)/2f;
         core.batch.setColor(1f, 1f, 1f, 0.3f+0.3f*multiplier);
         core.batch.draw(core.res.texBlack, 0, core.height/2-15, core.width, 30);
         core.batch.setColor(1, 1, 1, 1);
-        core.res.font.draw(core.batch, "TOQUE PARA JOGAR!", 0, core.height/2+core.res.font.getCapHeight()/2, core.width, 1, true);
+        core.res.font.draw(core.batch, "TOQUE PARA JOGAR!", 0, core.height/2+core.res.font.getCapHeight()/2, core.width, 1, false);
 
         // Draw help button
         core.batch.draw(texHelpButton, core.width-16-8, core.height-16-8);

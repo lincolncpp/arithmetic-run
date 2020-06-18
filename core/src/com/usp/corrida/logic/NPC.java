@@ -9,12 +9,26 @@ import com.usp.corrida.Core;
  */
 public class NPC extends Character{
 
+    String expression = "1";
+
     /**
      * @param core Instancia do core do jogo
      * @param spriteID Identificador do sprite
      */
     public NPC(Core core, int spriteID) {
         super(core, spriteID);
+    }
+
+    public void generate(int nivel){
+        if (nivel == 1){
+
+        }
+        else if (nivel == 2){
+
+        }
+        else if (nivel == 3){
+
+        }
     }
 
     /**
@@ -40,5 +54,9 @@ public class NPC extends Character{
         core.batch.setColor(1, 1, 1, 0.8f);
         core.batch.draw(core.res.texTextbox, getX()+10 -offsetX, getY()+20);
         core.batch.setColor(1, 1, 1, 1);
+
+        core.res.font.setColor(0, 0, 0, 1);
+        core.res.font.draw(core.batch, expression, getX()+10-offsetX, getY()+20+9+23f/2+core.res.font.getCapHeight()/2, 64, 1, false);
+        core.res.font.setColor(1, 1, 1, 1);
     }
 }
