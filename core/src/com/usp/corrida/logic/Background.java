@@ -8,7 +8,7 @@ import com.usp.corrida.Core;
 import com.usp.corrida.utils.Utils;
 
 /**
- * A classe Background é usado para renderizar todo o cenário de fundo do jogo. Basta chamar a função render no ciclo de renderização.
+ * Renderiza todo o cenário de fundo do jogo. Basta chamar a função render no ciclo de renderização.
  */
 public class Background {
     public static final int MAX_CLOUD = 5;

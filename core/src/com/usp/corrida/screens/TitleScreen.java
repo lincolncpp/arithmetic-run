@@ -8,7 +8,7 @@ import com.usp.corrida.Core;
 import com.usp.corrida.logic.Character;
 
 /**
- * É a tela que renderiza a parte inicial do jogo. Para alternar entre telas, use a função setScreen da classe Game, passando como parâmetro o objeto da tela.
+ * Renderiza a parte inicial do jogo. Para alternar entre telas, use a função setScreen da classe Game, passando como parâmetro o objeto da tela.
  */
 public class TitleScreen extends ScreenAdapter {
     private final Core core;

@@ -7,7 +7,7 @@ import com.usp.corrida.Core;
 import com.usp.corrida.utils.Utils;
 
 /**
- * A classe Character controla tudo relacionado ao personagem: renderização, posição, animação, toque e caixa de diálogo.
+ * Controla tudo relacionado ao personagem: renderização, posição, animação, toque e caixa de diálogo.
  */
 public class Character {
     public static final long BASE_FRAME_INTERVAL = 120;

@@ -10,7 +10,7 @@ import com.usp.corrida.logic.Character;
 import com.usp.corrida.utils.Utils;
 
 /**
- * É a tela que lida com a renderização e mecânica de jogo. Para alternar entre telas, use a função setScreen da classe Game, passando como parâmetro o objeto da tela.
+ * Lida com a renderização e mecânica de jogo. Para alternar entre telas, use a função setScreen da classe Game, passando como parâmetro o objeto da tela.
  */
 public class GameScreen extends ScreenAdapter {
     public static final long POINTS_EFFECT_INTERVAL = 65;

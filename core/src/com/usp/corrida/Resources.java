@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 /**
- * A classe Resources cuida de todos os recursos compartilhados, permitindo seu uso em mais de um objeto
+ * Cuida de todos os recursos compartilhados, permitindo seu uso em mais de um objeto
  */
 public class Resources {
     public static final int MAX_SPRITES = 11;
