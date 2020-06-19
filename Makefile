@@ -5,4 +5,4 @@ TITLE="Corrida Aritmetica - docs"
 
 doc:
 	rm -rf docs/
-	javadoc -doctitle $(TITLE) -windowtitle $(TITLE) -noindex -notree -nohelp -nodeprecated -d $(DEST) -sourcepath $(SRC) $(PACKAGE) $(PACKAGE).logic $(PACKAGE).screens $(PACKAGE).utils
+	javadoc -private -doctitle $(TITLE) -windowtitle $(TITLE) -noindex -notree -nohelp -nodeprecated -d $(DEST) -sourcepath $(SRC) $(PACKAGE) $(PACKAGE).logic $(PACKAGE).screens $(PACKAGE).utils
