@@ -23,13 +23,16 @@ public class Core extends com.badlogic.gdx.Game {
 	public SpriteBatch batch;
 
 	// Random instance
-	public Random rand = new Random();
+	public Random rand;
+
+	// Save instance
+	public Save save;
 
 	// Screens
 	public TitleScreen titleScreen;
 	public GameScreen gameScreen;
 
-	// Game instance
+	// Background instance
 	public Background background;
 
 	// Character
@@ -49,6 +52,9 @@ public class Core extends com.badlogic.gdx.Game {
 	 */
 	@Override
 	public void create () {
+		rand = new Random();
+		save = new Save();
+
 		// Camera building
 		width = Gdx.graphics.getWidth()/2f;
 		height = Gdx.graphics.getHeight()/2f;

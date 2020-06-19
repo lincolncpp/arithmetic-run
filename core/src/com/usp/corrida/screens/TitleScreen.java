@@ -92,7 +92,7 @@ public class TitleScreen extends ScreenAdapter {
         core.charPlayer.render(delta, 0);
 
         // Draw record text
-        core.res.font20.draw(core.batch, "RECORDE: 0", 10, core.height-32/2f+core.res.font20.getCapHeight()/2f);
+        core.res.font20.draw(core.batch, "RECORDE: "+core.save.getHighScore(), 10, core.height-32/2f+core.res.font20.getCapHeight()/2f);
 
         // Draw "Touch to play"
         float multiplier = ((float)Math.sin((double)System.currentTimeMillis()/(double)300)+1)/2f;

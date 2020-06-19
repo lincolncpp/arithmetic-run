@@ -39,10 +39,11 @@ public class GameScreen extends ScreenAdapter {
 
     // Game variables
     int life = 3;
-    long pointsAdd = 0;
-    long points = 0;
+    long scoreAdd = 0;
+    long score = 0;
     int challengeValue = 0;
     Boolean gameOver = false;
+    String gameOverMessage = "";
 
     /**
      * @param core Instancia do core do jogo
@@ -59,9 +60,9 @@ public class GameScreen extends ScreenAdapter {
      * @return nível de dificuldade atual com base na pontuação
      */
     public int getLevel(){
-        if (points >= 10000000) return 4;
-        if (points >= 100000) return 3;
-        if (points >= 1000) return 4;
+//        if (score >= 10000000) return 4;
+//        if (score >= 100000) return 3;
+//        if (score >= 1000) return 4;
         return 1;
     }
 
@@ -89,7 +90,7 @@ public class GameScreen extends ScreenAdapter {
             int correct = core.rand.getIntRand(1, 10);
 
             // 60% to pick a correct answer
-            if (correct <= -9) npc[i].setValue(challengeValue);
+            if (correct <= 6) npc[i].setValue(challengeValue);
             else {
                 npc[i].setValue(core.rand.getIntRand(2, 100));
                 while(npc[i].getValue() == challengeValue) npc[i].setValue(core.rand.getIntRand(2, 100));
@@ -118,10 +119,11 @@ public class GameScreen extends ScreenAdapter {
         lastNPCX = 0;
 
         life = 3;
-        pointsAdd = 0;
-        points = 0;
+        scoreAdd = 0;
+        score = 0;
         challengeValue = 0;
         gameOver = false;
+        gameOverMessage = "";
 
         core.charPlayer.setIsMoving(true);
 
@@ -161,7 +163,7 @@ public class GameScreen extends ScreenAdapter {
 
                         if (npc[i].isTouched((int)fixedCoordinate.x, (int)fixedCoordinate.y, offsetX)){
                             if (npc[i].getValue() == challengeValue){
-                                pointsAdd += 100;
+                                scoreAdd += 100;
                                 npc[i].setSprite(10);
                                 npc[i].setText("");
                             }
@@ -172,6 +174,13 @@ public class GameScreen extends ScreenAdapter {
                                 if (life == 0){
                                     core.charPlayer.setFrameInterval(60);
                                     core.charPlayer.setText("$%!#@");
+
+                                    long totalScore = score+scoreAdd;
+                                    if (totalScore > core.save.getHighScore()){
+                                        core.save.setHighScore(totalScore);
+                                        gameOverMessage = "NOVO RECORDE!";
+                                    }
+                                    else gameOverMessage = "RECORDE: "+core.save.getHighScore();
 
                                     for(int j = 0;j < MAX_NPC;j++) npc[j].setText("");
                                     break;
@@ -235,9 +244,9 @@ public class GameScreen extends ScreenAdapter {
         if (System.currentTimeMillis() > tickPoints){
             tickPoints = System.currentTimeMillis()+POINTS_EFFECT_INTERVAL;
             for(int i = 60;i >= 0;i--){
-                if ((pointsAdd&(1L<<i)) > 0){
-                    points += (1L<<i);
-                    pointsAdd -= (1L<<i);
+                if ((scoreAdd &(1L<<i)) > 0){
+                    score += (1L<<i);
+                    scoreAdd -= (1L<<i);
                     break;
                 }
             }
@@ -296,7 +305,7 @@ public class GameScreen extends ScreenAdapter {
 
             core.batch.draw(core.res.texBlack, 0, fx, core.width, core.height-32);
             core.res.font32.draw(core.batch, "FIM DE JOGO!", 0, fx+core.height/2f+core.res.font32.getCapHeight()/2, core.width, 1, false);
-            core.res.font20.draw(core.batch, "Novo record!", 0, fx+core.height/2f+core.res.font32.getCapHeight()/2-25, core.width, 1, false);
+            core.res.font20.draw(core.batch, gameOverMessage, 0, fx+core.height/2f+core.res.font32.getCapHeight()/2-25, core.width, 1, false);
         }
     }
 
@@ -317,7 +326,7 @@ public class GameScreen extends ScreenAdapter {
         }
 
         // Drawing score
-        core.res.font20.draw(core.batch, "PONTOS: "+points, 10+20*2+16+10, core.height-32/2f+core.res.font20.getCapHeight()/2f);
+        core.res.font20.draw(core.batch, "PONTOS: "+ score, 10+20*2+16+10, core.height-32/2f+core.res.font20.getCapHeight()/2f);
 
         // Drawing characters
         for(int i = 0;i < MAX_NPC;i++){
