@@ -4,8 +4,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector3;
 import com.usp.corrida.Core;
 import com.usp.corrida.logic.Character;
+import com.usp.corrida.utils.Utils;
 
 /**
  * Renderiza a parte inicial do jogo. Para alternar entre telas, use a função setScreen da classe Game, passando como parâmetro o objeto da tela.
@@ -50,6 +52,7 @@ public class TitleScreen extends ScreenAdapter {
             @Override
             public boolean touchDown (int x, int y, int pointer, int button) {
                 core.setScreen(new GameScreen(core));
+
                 return true;
             }
         });

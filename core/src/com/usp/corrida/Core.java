@@ -6,6 +6,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FillViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.usp.corrida.logic.Background;
 import com.usp.corrida.logic.Character;
 import com.usp.corrida.screens.GameScreen;
@@ -18,8 +22,9 @@ import com.usp.corrida.utils.Save;
  */
 public class Core extends Game {
 	private static final Boolean showFPS = false;
+	private static final float FIXED_WIDTH = 400;
 
-	public float width;
+	public float width = FIXED_WIDTH;
 	public float height;
 
 	public Random rand;
@@ -33,7 +38,7 @@ public class Core extends Game {
 	public Character charPlayer;
 
 	public SpriteBatch batch;
-	private OrthographicCamera camera;
+	public OrthographicCamera camera;
 
 	/**
 	 * Chamada quando o programa é inicializado. Faz o carregamento completo do jogo
@@ -44,11 +49,8 @@ public class Core extends Game {
 		save = new Save();
 
 		// Setting up the camera
-		width = Gdx.graphics.getWidth()/2f;
-		height = Gdx.graphics.getHeight()/2f;
-		camera = new OrthographicCamera(width, height);
-		camera.position.set(width/2f, height/2f, 0);
-		camera.update();
+		camera = new OrthographicCamera();
+		updateScale(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 		// Loading resources
 		res = new Resources();
@@ -79,6 +81,19 @@ public class Core extends Game {
 	}
 
 	/**
+	 * Atualiza a escala da resolução do jogo
+	 * @param width Largura da tela
+	 * @param height Altura da tela
+	 */
+	private void updateScale(int width, int height){
+		float scale = FIXED_WIDTH/width;
+		this.height = height*scale;
+
+		camera.position.set(this.width/2f, this.height/2f, 0);
+		camera.setToOrtho(false, this.width, this.height);
+	}
+
+	/**
 	 * Renderiza todo o programa
 	 */
 	@Override
@@ -100,6 +115,11 @@ public class Core extends Game {
 		}
 
 		batch.end();
+	}
+
+	@Override
+	public void resize(int width, int height){
+		updateScale(width, height);
 	}
 
 	/**

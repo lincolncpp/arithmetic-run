@@ -1,6 +1,7 @@
 package com.usp.corrida.utils;
 
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.usp.corrida.Core;
 
 /**
@@ -26,9 +27,7 @@ public class Utils {
      * @return Ponto coordenado corrigido, origem no canto inferior esquerdo
      */
     public static Vector2 fixTouchPosition(Core core, int x, int y){
-        Vector2 res = new Vector2(x, (int)core.height*2-y);
-        res.y /= 2;
-        res.x /= 2;
-        return res;
+        Vector3 point = core.camera.unproject(new Vector3(x, y, 0));
+        return new Vector2(point.x, point.y);
     }
 }

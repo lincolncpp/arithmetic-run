@@ -76,9 +76,9 @@ public class GameScreen extends ScreenAdapter {
      * @return Nível de dificuldade atual com base na pontuação
      */
     private int getLevel(){
-        if (score >= 10000000) return 4;
-        if (score >= 100000) return 3;
-        if (score >= 1000) return 4;
+//        if (score >= 10000000) return 4;
+//        if (score >= 100000) return 3;
+//        if (score >= 1000) return 4;
         return 1;
     }
 
@@ -267,7 +267,7 @@ public class GameScreen extends ScreenAdapter {
     private void update(float delta){
         offsetX += delta*30;
 
-        float d = delta*10;
+        float d = delta*20;
         for(int i = 0; i < MAX_NPC; i++){
             if (npc[i].getSprite() == 10) continue;
             npc[i].setX(npc[i].getX()-d);
