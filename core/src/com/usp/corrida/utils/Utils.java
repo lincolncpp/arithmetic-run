@@ -4,7 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.usp.corrida.Core;
 
 /**
- * Funções diversas para auxiliar no desenvolvimento do programa
+ * Funções diversas
  */
 public class Utils {
 
@@ -20,10 +20,10 @@ public class Utils {
     }
 
     /**
-     * @param core Instancia do core do jogo
-     * @param x coordenada x do ponto clicado
-     * @param y coordenada y do ponto clicado
-     * @return Ponto coordenado corrigido
+     * @param core Instancia do jogo
+     * @param x Coordenada x do ponto clicado
+     * @param y Coordenada y do ponto clicado
+     * @return Ponto coordenado corrigido, origem no canto inferior esquerdo
      */
     public static Vector2 fixTouchPosition(Core core, int x, int y){
         Vector2 res = new Vector2(x, (int)core.height*2-y);

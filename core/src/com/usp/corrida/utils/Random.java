@@ -3,7 +3,7 @@ package com.usp.corrida.utils;
 import java.util.Calendar;
 
 /**
- * Cuida das funções aleatórias
+ * Número aleatórios
  */
 public class Random {
     private final long p = 2147483648L;
@@ -13,22 +13,31 @@ public class Random {
     private long xi = 0;
 
     public Random(long seed) {
-        xi = seed;
+        xi = seed % p;
     }
 
     public Random() {
         xi = Calendar.getInstance().getTimeInMillis() % p;
     }
 
+    /**
+     * @return Número no intervalo [0, 1)
+     */
     public double getRand() {
         xi = (a+m*xi) % p;
         return (double)xi/p;
     }
 
+    /**
+     * @return Número no intervalo [0, max)
+     */
     public int getIntRand(int max) {
         return (int)(getRand()*max);
     }
 
+    /**
+     * @return Número no intervalo [min, max]
+     */
     public int getIntRand(int min, int max){
         return min+getIntRand(max-min+1);
     }

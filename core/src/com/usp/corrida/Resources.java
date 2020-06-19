@@ -5,30 +5,25 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
 /**
- * Classe responsável pelo carregamento de recursos compartilhados
+ * A classe Resources cuida de todos os recursos compartilhados, permitindo seu uso em mais de um objeto
  */
 public class Resources {
-
     public static final int MAX_SPRITES = 11;
 
-    // Shared font
     public BitmapFont font20;
     public BitmapFont font32;
 
-    // Shared texture
     public Texture texBlack;
     public Texture texTextbox;
     public Texture texHurt;
 
-    // Sprites configuration
     public Texture[] texSprite = new Texture[MAX_SPRITES];
     public int[] SPRITE_WIDTH = new int[MAX_SPRITES];
     public int[] SPRITE_HEIGHT = new int[MAX_SPRITES];
     public int[] SPRITE_FRAMES = new int[MAX_SPRITES];
 
-
     /**
-     * Faz o carregamento de todos os recursos compartilhados
+     * Carrega todos os recursos
      */
     public Resources(){
         font20 = new BitmapFont(Gdx.files.internal("font/clacon20.fnt"));
@@ -38,7 +33,6 @@ public class Resources {
         texTextbox = new Texture(Gdx.files.internal("textbox.png"));
         texHurt = new Texture(Gdx.files.internal("hurt.png"));
 
-        // Loading sprites
         for(int i = 0;i < MAX_SPRITES;i++){
             texSprite[i] = new Texture(Gdx.files.internal("sprites/"+i+".png"));
         }

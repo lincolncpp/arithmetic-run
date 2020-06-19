@@ -8,19 +8,13 @@ import com.usp.corrida.Core;
 import com.usp.corrida.logic.Character;
 
 /**
- * Classe destinada à renderização da tela de título
+ * É a tela que renderiza a parte inicial do jogo. Para alternar entre telas, use a função setScreen da classe Game, passando como parâmetro o objeto da tela.
  */
 public class TitleScreen extends ScreenAdapter {
+    private final Core core;
 
-    // Core instance
-    Core core;
+    private Texture texHelpButton;
 
-    // Texture
-    Texture texHelpButton;
-
-    /**
-     * @param core Instancia do core do jogo
-     */
     public TitleScreen(Core core){
         this.core = core;
 
@@ -30,25 +24,27 @@ public class TitleScreen extends ScreenAdapter {
     }
 
     /**
-     * Reseta os componentes da tela
+     * Volta ao estado zero
      */
-    public void resetScreen(){
-        // Set character moving
+    private void resetScreen(){
+        // Resetting character
         core.charPlayer.setIsMoving(false);
         core.charPlayer.setPos(32, 32);
         core.charPlayer.setText("");
         core.charPlayer.setFrameInterval(Character.BASE_FRAME_INTERVAL);
         core.charPlayer.setFrame(0);
 
-        // Reseting background
+        // Resetting background
         core.background.resetBackground();
     }
 
     /**
-     * Essa função é chamada quando a tela acaba de ser exibida
+     * Chamada quando esse objeto é definido pela função setScreen da classe Game
      */
     @Override
     public void show(){
+        resetScreen();
+
         // Input Processor
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
@@ -57,12 +53,10 @@ public class TitleScreen extends ScreenAdapter {
                 return true;
             }
         });
-
-        resetScreen();
     }
 
     /**
-     * Essa função é chamada quando a tela acaba de ser escondida
+     * Chamada quando esse objeto não for mais a tela atual, definida pela função setScreen da classe Game
      */
     @Override
     public void hide(){
@@ -70,10 +64,10 @@ public class TitleScreen extends ScreenAdapter {
     }
 
     /**
-     * Essa função é chamada antes da função render. É utilizada para atualizar tudo antes da renderização
+     * Chamada logo no início da função render. É utilizada para atualizar tudo antes da renderização
      * @param delta Variação de tempo entre a chamada atual e a última chamada
      */
-    public void update(float delta){
+    private void update(float delta){
 
     }
 
@@ -85,7 +79,7 @@ public class TitleScreen extends ScreenAdapter {
     public void render (float delta) {
         update(delta);
 
-        // Draw game in background
+        // Draw background
         core.background.render(delta, 0);
 
         // Draw player

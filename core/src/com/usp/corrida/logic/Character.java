@@ -7,151 +7,179 @@ import com.usp.corrida.Core;
 import com.usp.corrida.utils.Utils;
 
 /**
- * Classe responsável pela renderização dos personagens
+ * A classe Character controla tudo relacionado ao personagem: renderização, posição, animação, toque e caixa de diálogo.
  */
 public class Character {
-
     public static final long BASE_FRAME_INTERVAL = 120;
 
-    // Core instance
-    Core core;
+    private final Core core;
 
-    // Character variables
-    Boolean isMoving = false;
-    long tickFrame = 0;
-    long frameInterval = 120;
-    int frame = 0;
+    private Boolean isMoving = false;
+    private long tickFrame = 0;
+    private long frameInterval = 120;
+    private int frame = 0;
 
-    Vector2 position;
-    Boolean horizontalFlip = false;
-    int spriteID = 0;
+    private final Vector2 position = new Vector2(0, 0);
+    private Boolean horizontalFlip = false;
+    private int sprite = 0;
 
-    String text = "";
-    int value = 0;
+    private String text = "";
+    private int value = 0;
 
-    /**
-     * @param core Instancia do core do jogo
-     * @param spriteID Identificador do sprite
-     */
-    public Character(Core core, int spriteID){
+    public Character(Core core, int sprite){
         this.core = core;
-        this.spriteID = spriteID;
-
-        position = new Vector2(0, 0);
+        this.sprite = sprite;
     }
 
     /**
-     * @param spriteID Identificador do sprite
+     * @param sprite Identificador do sprite
      */
-    public void setSprite(int spriteID){
+    public void setSprite(int sprite){
         this.frame = 0;
-        this.spriteID = spriteID;
+        this.sprite = sprite;
     }
 
     /**
      * @return Identificador do sprite
      */
     public int getSprite(){
-        return spriteID;
+        return sprite;
     }
 
     /**
-     * @param frame frame de animação
+     * @param frame Quadro de animação
      */
     public void setFrame(int frame){
         this.frame = frame;
     }
 
     /**
-     * @return Frame atual da animação
+     * @return Quadro de animação
      */
     public int getFrame(){
         return frame;
     }
 
     /**
-     * @param frameInterval intervalo entre frames da animação do sprite
+     * @param frameInterval Intervalo em ms entre quadros da animação do sprite
      */
     public void setFrameInterval(long frameInterval){
         this.frameInterval = frameInterval;
     }
 
     /**
-     * Define a mensagem no balão de fala do personagem
+     * @return Intervalo em ms entre quadros da animação do sprite
+     */
+    public long getFrameInterval(){
+        return frameInterval;
+    }
+
+    /**
+     * @param text Texto associado ao personagem
      */
     public void setText(String text){
         this.text = text;
     }
 
     /**
-     * Define o valor associado ao personagem
+     * @return Texto associado ao personagem
+     */
+    public String getText(){
+        return text;
+    }
+
+    /**
+     * @param value Valor associado ao personagem
      */
     public void setValue(int value){
         this.value = value;
     }
 
     /**
-     * @return valor associado ao personagem
+     * @return Valor associado ao personagem
      */
     public int getValue(){
         return value;
     }
 
     /**
-     * Define a posição coordenada do personagem na tela
+     * @param x Coordenada x
+     * @param y Coordenada y
      */
     public void setPos(float x, float y){
         position.set(x, y);
     }
 
     /**
-     * Define a posição X do personagem
+     * @return Posição coordenada do personagem
+     */
+    public Vector2 getPos(){
+        return position;
+    }
+
+    /**
+     *
+     * @param x Coordenada x
      */
     public void setX(float x){
         position.x = x;
     }
 
     /**
-     * Define a posição Y do personagem
-     */
-    public void setY(float y){
-        position.y = y;
-    }
-
-    /**
-     * @return Posição X
+     * @return Coordenada x
      */
     public float getX(){
         return position.x;
     }
 
     /**
-     * @return Posição Y
+     * @param y Coordenada y
+     */
+    public void setY(float y){
+        position.y = y;
+    }
+
+    /**
+     * @return Coordenada y
      */
     public float getY(){
         return position.y;
     }
 
     /**
-     * Define o flip horizontal do sprite
+     * @param flip Flip horizontal do sprite
      */
     public void setHorizontalFlip(Boolean flip){
         horizontalFlip = flip;
     }
 
     /**
-     * Define se o personagem está em movimento ou não
+     * @return Flip horizontal do sprite
+     */
+    public Boolean getHorizontalFlip(){
+        return horizontalFlip;
+    }
+
+    /**
+     * @param moving Sprite em animação ou não
      */
     public void setIsMoving(Boolean moving){
         isMoving = moving;
     }
 
     /**
-     *
-     * @param x coordenada x do ponto clicado
-     * @param y coordenada y do ponto clicado
-     * @param offsetX Deslocamento da coordenada x do cenário
-     * @return Retorna se o personagem foi tocado ou não
+     * @return Sprite em animação ou não
+     */
+    public Boolean getIsMoving(){
+        return isMoving;
+    }
+
+    /**
+     * Faz o uso do Intersector para checar se um ponto está dentro de um determinado polígono
+     * @param x Coordenada x do ponto clicado
+     * @param y Coordenada y do ponto clicado
+     * @param offsetX Deslocamento da coordenada x
+     * @return Retorna se foi tocado sobre o personagem ou não
      */
     public Boolean isTouched(int x, int y, float offsetX){
         float textX = getX()+10;
@@ -166,22 +194,22 @@ public class Character {
         rect.add(new Vector2(textX, textY+textHeight));
         rect.add(new Vector2(textX+textWidth, textY+textHeight));
         rect.add(new Vector2(textX+textWidth, textY));
-        rect.add(new Vector2(getX()+core.res.SPRITE_WIDTH[spriteID], getY()));
+        rect.add(new Vector2(getX()+core.res.SPRITE_WIDTH[sprite], getY()));
 
         return Intersector.isPointInPolygon(rect, point);
     }
 
     /**
-     * Essa função é chamada antes da função render. É utilizada para atualizar os frames de movimento
+     * Chamada logo no início da função render. É utilizada para atualizar os quadros de animação
      * @param delta Variação de tempo entre a chamada atual e a última chamada
-     * @param offsetX Deslocamento da coordenada x do cenário
+     * @param offsetX Deslocamento da coordenada x
      */
-    public void update(float delta, float offsetX){
+    private void update(float delta, float offsetX){
         if (isMoving){
             if (System.currentTimeMillis() > tickFrame){
                 tickFrame = System.currentTimeMillis()+frameInterval;
                 frame++;
-                frame %= core.res.SPRITE_FRAMES[spriteID];
+                frame %= core.res.SPRITE_FRAMES[sprite];
             }
         }
     }
@@ -189,19 +217,21 @@ public class Character {
     /**
      * Renderiza o sprite do personagem
      * @param delta Variação de tempo entre a chamada atual e a última chamada
-     * @param offsetX Deslocamento da coordenada x do cenário
+     * @param offsetX Deslocamento da coordenada x
      */
     public void render(float delta, float offsetX){
         update(delta, offsetX);
 
+        // Fixing float values
         offsetX = Utils.fixFloat(offsetX);
-
         Vector2 fixedPosition = new Vector2(getX(), getY());
         fixedPosition.x = Utils.fixFloat(fixedPosition.x);
         fixedPosition.y = Utils.fixFloat(fixedPosition.y);
 
-        core.batch.draw(core.res.texSprite[spriteID], fixedPosition.x-offsetX, fixedPosition.y, core.res.SPRITE_WIDTH[spriteID], core.res.SPRITE_HEIGHT[spriteID], frame*core.res.SPRITE_WIDTH[spriteID], 0, core.res.SPRITE_WIDTH[spriteID], core.res.SPRITE_HEIGHT[spriteID], horizontalFlip, false);
+        // Drawing sprite
+        core.batch.draw(core.res.texSprite[sprite], fixedPosition.x-offsetX, fixedPosition.y, core.res.SPRITE_WIDTH[sprite], core.res.SPRITE_HEIGHT[sprite], frame*core.res.SPRITE_WIDTH[sprite], 0, core.res.SPRITE_WIDTH[sprite], core.res.SPRITE_HEIGHT[sprite], horizontalFlip, false);
 
+        // Drawing textbox
         if (text.length() > 0){
             core.batch.setColor(1, 1, 1, 0.8f);
             core.batch.draw(core.res.texTextbox, fixedPosition.x+10 -offsetX, fixedPosition.y+20);

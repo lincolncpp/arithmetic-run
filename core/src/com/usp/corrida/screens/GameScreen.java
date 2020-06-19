@@ -10,44 +10,34 @@ import com.usp.corrida.logic.Character;
 import com.usp.corrida.utils.Utils;
 
 /**
- * Classe destinada à renderização da tela de jogo
+ * É a tela que lida com a renderização e mecânica de jogo. Para alternar entre telas, use a função setScreen da classe Game, passando como parâmetro o objeto da tela.
  */
 public class GameScreen extends ScreenAdapter {
-
-    // Core instance
-    Core core;
-
-    // Texture
-    Texture texLife;
-
-    // Tick variables
     public static final long POINTS_EFFECT_INTERVAL = 65;
     public static final long HURT_INTERVAL = 1500;
     public static final long GAMEOVER_SLIDE = 1000;
-
-    long tickPoints = 0;
-    long tickHurt = 0;
-    long tickGameOver = 0;
-
-    // Screen offset
-    float offsetX = 0;
-
-    // NPCs
     public static final int MAX_NPC = 3;
-    Character[] npc = new Character[MAX_NPC];
-    float lastNPCX = 0;
 
-    // Game variables
-    int life = 3;
-    long scoreAdd = 0;
-    long score = 0;
-    int challengeValue = 0;
-    Boolean gameOver = false;
-    String gameOverMessage = "";
+    private final Core core;
 
-    /**
-     * @param core Instancia do core do jogo
-     */
+    private Texture texLife;
+
+    private long tickPoints = 0;
+    private long tickHurt = 0;
+    private long tickGameOver = 0;
+
+    private float offsetX = 0;
+
+    private final Character[] npc = new Character[MAX_NPC];
+    private float lastNPCX = 0;
+
+    private int life = 3;
+    private long scoreAdd = 0;
+    private long score = 0;
+    private int challengeValue = 0;
+    private Boolean gameOver = false;
+    private String gameOverMessage = "";
+
     public GameScreen(Core core){
         this.core = core;
 
@@ -57,19 +47,45 @@ public class GameScreen extends ScreenAdapter {
     }
 
     /**
-     * @return nível de dificuldade atual com base na pontuação
+     * Volta para o estado zero
      */
-    public int getLevel(){
-//        if (score >= 10000000) return 4;
-//        if (score >= 100000) return 3;
-//        if (score >= 1000) return 4;
+    public void resetScreen(){
+        tickPoints = 0;
+        tickHurt = 0;
+        tickGameOver = 0;
+
+        offsetX = 0;
+        lastNPCX = 0;
+
+        life = 3;
+        scoreAdd = 0;
+        score = 0;
+        challengeValue = 0;
+        gameOver = false;
+        gameOverMessage = "";
+
+        core.charPlayer.setIsMoving(true);
+
+        refreshChallenge();
+
+        setupNPCs();
+    }
+
+    /**
+     * !!!!!!!!!!!!!!!!!!!!! AINDA INCERTO !!!!!!!!!!!!!!!!!!!!!!
+     * @return Nível de dificuldade atual com base na pontuação
+     */
+    private int getLevel(){
+        if (score >= 10000000) return 4;
+        if (score >= 100000) return 3;
+        if (score >= 1000) return 4;
         return 1;
     }
 
     /**
-     * Atualiza o desafio
+     * Atualiza o desafio, gerando um novo número para o personagem principal
      */
-    public void refreshChallenge(){
+    private void refreshChallenge(){
         int level = getLevel();
         if (level == 1) challengeValue = core.rand.getIntRand(11, 100);
         else if (level == 2) challengeValue = core.rand.getIntRand(101, 1000);
@@ -80,9 +96,9 @@ public class GameScreen extends ScreenAdapter {
     }
 
     /**
-     * Atualiza a resposta do NPC i
+     * Atualiza a resposta do npc i. Os valores Character.value e Character.text do npc i são modificados.
      */
-    public void updateNPCAnswer(int i){
+    private void updateNPCAnswer(int i){
         int level = getLevel();
         if (level == 1){
             // Only + and -
@@ -108,34 +124,9 @@ public class GameScreen extends ScreenAdapter {
     }
 
     /**
-     * Reseta os componentes da tela
+     * Faz a primeira configuração dos npcs
      */
-    public void resetScreen(){
-        tickPoints = 0;
-        tickHurt = 0;
-        tickGameOver = 0;
-
-        offsetX = 0;
-        lastNPCX = 0;
-
-        life = 3;
-        scoreAdd = 0;
-        score = 0;
-        challengeValue = 0;
-        gameOver = false;
-        gameOverMessage = "";
-
-        core.charPlayer.setIsMoving(true);
-
-        refreshChallenge();
-
-        setupNPCs();
-    }
-
-    /**
-     * Configuração inicial dos NPCs
-     */
-    public void setupNPCs(){
+    private void setupNPCs(){
         for(int i = 0;i < MAX_NPC;i++) {
             npc[i] = new Character(core, 0);
             npc[i].setX(-10000);
@@ -143,62 +134,77 @@ public class GameScreen extends ScreenAdapter {
     }
 
     /**
-     * Essa função é chamada quando a tela acaba de ser exibida
+     * Chamada sempre que o personagem perde uma vida. Trata o caso de quando não se tem mais vida, dando inicio às animações de fim de jogo
+     */
+    private void loseLife(){
+        life--;
+        tickHurt = System.currentTimeMillis()+HURT_INTERVAL;
+
+        if (life == 0){
+            // $%!#@
+            core.charPlayer.setFrameInterval(60);
+            core.charPlayer.setText("$%!#@");
+
+            // Removing npcs textbox
+            for(int j = 0;j < MAX_NPC;j++) npc[j].setText("");
+
+            // Checking for new high score
+            long totalScore = score+scoreAdd;
+            if (totalScore > core.save.getHighScore()){
+                core.save.setHighScore(totalScore);
+                gameOverMessage = "NOVO RECORDE!";
+            }
+            else gameOverMessage = "RECORDE: "+core.save.getHighScore();
+        }
+    }
+
+    /**
+     * Chamado quando a tela é tocada
+     * @param point Ponto coordenado, origem no canto inferior esquerdo
+     * @param pointer O ponteiro para o evento
+     * @param button O botão
+     */
+    public void touchDown(Vector2 point, int pointer, int button){
+        if (gameOver){
+            core.setScreen(core.titleScreen);
+        }
+
+        if (life > 0){
+            for(int i = 0; i < MAX_NPC; i++){
+                if (npc[i].getSprite() == 10) continue;
+
+                if (npc[i].isTouched((int)point.x, (int)point.y, offsetX)){
+                    if (npc[i].getValue() == challengeValue){
+                        scoreAdd += 100;
+                        npc[i].setSprite(10);
+                        npc[i].setText("");
+                    }
+                    else loseLife();
+                }
+            }
+        }
+    }
+
+    /**
+     * Chamada quando esse objeto é definido pela função setScreen da classe Game
      */
     @Override
     public void show(){
+        resetScreen();
+
         // Input Processor
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean touchDown (int x, int y, int pointer, int button) {
                 Vector2 fixedCoordinate = Utils.fixTouchPosition(core, x, y);
-
-                if (gameOver){
-                    core.setScreen(core.titleScreen);
-                }
-
-                if (life > 0){
-                    for(int i = 0; i < MAX_NPC; i++){
-                        if (npc[i].getSprite() == 10) continue;
-
-                        if (npc[i].isTouched((int)fixedCoordinate.x, (int)fixedCoordinate.y, offsetX)){
-                            if (npc[i].getValue() == challengeValue){
-                                scoreAdd += 100;
-                                npc[i].setSprite(10);
-                                npc[i].setText("");
-                            }
-                            else{
-                                life--;
-                                tickHurt = System.currentTimeMillis()+HURT_INTERVAL;
-
-                                if (life == 0){
-                                    core.charPlayer.setFrameInterval(60);
-                                    core.charPlayer.setText("$%!#@");
-
-                                    long totalScore = score+scoreAdd;
-                                    if (totalScore > core.save.getHighScore()){
-                                        core.save.setHighScore(totalScore);
-                                        gameOverMessage = "NOVO RECORDE!";
-                                    }
-                                    else gameOverMessage = "RECORDE: "+core.save.getHighScore();
-
-                                    for(int j = 0;j < MAX_NPC;j++) npc[j].setText("");
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-
+                GameScreen.this.touchDown(fixedCoordinate, pointer, button);
                 return true;
             }
         });
-
-        resetScreen();
     }
 
     /**
-     * Essa função é chamada quando a tela acaba de ser escondida
+     * Chamada quando esse objeto não for mais a tela atual, definida pela função setScreen da classe Game
      */
     @Override
     public void hide(){
@@ -206,31 +212,32 @@ public class GameScreen extends ScreenAdapter {
     }
 
     /**
-     * Atualiza os NPCs no cenário
-     * @param offsetX Deslocamento da coordenada x do cenário
+     * Recicla os npcs que não estão mais na tela
+     * @param offsetX Deslocamento da coordenada x
      */
-    public void updateNPCs(float offsetX){
+    private void recycleNPCs(float offsetX){
         for(int i = 0;i < MAX_NPC;i++) {
             float realX = npc[i].getX()-offsetX;
             if (realX < -100){
+                // Setting a new sprite
                 int sid = core.rand.getIntRand(1, 9);
-
                 npc[i].setSprite(sid);
                 if (sid == 7) npc[i].setY(core.rand.getIntRand(32, (int)core.height-100));
                 else npc[i].setY(32);
 
+                // Setting a new position
                 float x1 = offsetX + core.width + core.rand.getIntRand(0, (int)(core.width/2f));
                 float x2 = lastNPCX + core.rand.getIntRand(100, (int)(core.width/2f));
                 float newX = Math.max(x1, x2);
                 lastNPCX = newX;
-
                 npc[i].setX(newX);
                 npc[i].setIsMoving(true);
 
+                // Setting a new answer
                 updateNPCAnswer(i);
             }
 
-            // Smoke sprite
+            // Sending the smoked npc to the garbage so that it can be recycled
             if (npc[i].getSprite() == 10){
                 if (npc[i].getFrame() == core.res.SPRITE_FRAMES[10]-1) npc[i].setX(-10000);
             }
@@ -238,9 +245,9 @@ public class GameScreen extends ScreenAdapter {
     }
 
     /**
-     * Faz a animação do aumento de pontuação
+     * Chamada quando se tem uma nova pontuação. Essa função realiza um efeito sobre o texto dos pontos
      */
-    public void updatePoints(){
+    private void updateScore(){
         if (System.currentTimeMillis() > tickPoints){
             tickPoints = System.currentTimeMillis()+POINTS_EFFECT_INTERVAL;
             for(int i = 60;i >= 0;i--){
@@ -254,11 +261,10 @@ public class GameScreen extends ScreenAdapter {
     }
 
     /**
-     * Essa função é chamada antes da função render. É utilizada para atualizar tudo antes da renderização
+     * Chamada logo no início da função render. É utilizada para atualizar tudo antes da renderização
      * @param delta Variação de tempo entre a chamada atual e a última chamada
      */
-    public void update(float delta){
-
+    private void update(float delta){
         offsetX += delta*30;
 
         float d = delta*10;
@@ -267,22 +273,22 @@ public class GameScreen extends ScreenAdapter {
             npc[i].setX(npc[i].getX()-d);
         }
 
+        // Make the player run quickly along the road when the game is over
         if (life == 0){
             float f = delta*150;
             core.charPlayer.setX(core.charPlayer.getX()+f);
         }
 
-        updateNPCs(offsetX);
-        updatePoints();
+        recycleNPCs(offsetX);
+        updateScore();
     }
 
     /**
-     * Desenha um efeito na tela ao perder vida
+     * Chamada sempre no ciclo de renderização. Essa função realiza um efeito sobre a tela quando o personagem perde uma vida
      */
-    public void renderHurt(){
+    private void renderHurt(){
         long time = tickHurt-System.currentTimeMillis();
         if (time > 0){
-
             float x = 3.8f-4f*time/(float)HURT_INTERVAL;
             core.batch.setColor(1, 1, 1, Math.min(1, (float) Math.exp(-x)));
             core.batch.draw(core.res.texHurt, 0, 0, core.width, core.height);
@@ -291,9 +297,9 @@ public class GameScreen extends ScreenAdapter {
     }
 
     /**
-     * Desenha mensagem de fim de jogo
+     * Chamada quando life == 0. Essa função faz surgir a tela de GAME OVER
      */
-    public void renderGameOver(){
+    private void renderGameOver(){
         if (life == 0 && core.charPlayer.getX() > core.width){
             if (tickGameOver == 0) tickGameOver = System.currentTimeMillis();
             long time = System.currentTimeMillis()-tickGameOver;
@@ -334,7 +340,7 @@ public class GameScreen extends ScreenAdapter {
         }
         core.charPlayer.render(delta, 0);
 
-        // Drawing hurt
+        // Drawing hurt effect
         renderHurt();
 
         // Drawing game over

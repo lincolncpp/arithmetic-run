@@ -1,6 +1,7 @@
 package com.usp.corrida;
 
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -10,88 +11,75 @@ import com.usp.corrida.logic.Character;
 import com.usp.corrida.screens.GameScreen;
 import com.usp.corrida.screens.TitleScreen;
 import com.usp.corrida.utils.Random;
+import com.usp.corrida.utils.Save;
 
 /**
- * Classe principal do jogo.
+ * Controlador central do programa. Faz a comunicação entre todos os outros componentes
  */
-public class Core extends com.badlogic.gdx.Game {
+public class Core extends Game {
+	private static final Boolean showFPS = false;
 
 	public float width;
 	public float height;
 
-	// Public batch
-	public SpriteBatch batch;
-
-	// Random instance
 	public Random rand;
-
-	// Save instance
 	public Save save;
+	public Resources res;
 
-	// Screens
 	public TitleScreen titleScreen;
 	public GameScreen gameScreen;
 
-	// Background instance
 	public Background background;
-
-	// Character
 	public Character charPlayer;
 
-	// Shared resources
-	public Resources res;
-
-	// Camera
+	public SpriteBatch batch;
 	private OrthographicCamera camera;
 
-	// Debug
-	Boolean showFPS = false;
-
 	/**
-	 * Faz as primeiras configurações do programa
+	 * Chamada quando o programa é inicializado. Faz o carregamento completo do jogo
 	 */
 	@Override
 	public void create () {
 		rand = new Random();
 		save = new Save();
 
-		// Camera building
+		// Setting up the camera
 		width = Gdx.graphics.getWidth()/2f;
 		height = Gdx.graphics.getHeight()/2f;
 		camera = new OrthographicCamera(width, height);
 		camera.position.set(width/2f, height/2f, 0);
 		camera.update();
 
-		// Resouces loading
+		// Loading resources
 		res = new Resources();
 
-		// Batch building
+		// Setting up the batch
 		batch = new SpriteBatch();
 
-		// Background building
+		// Loading and setting up the background
 		background = new Background(this);
 
-		// Setting up player
+		// Setting up the player
 		setupPlayer();
 
-		// Screen building
+		// Setting up the screens
 		titleScreen = new TitleScreen(this);
 		gameScreen = new GameScreen(this);
 
-		// Set initial screen
+		// Initial screen
 		setScreen(titleScreen);
 	}
 
 	/**
-	 * Configuração inicial do jogador
+	 * Faz a primeira configuração do jogador
 	 */
-	public void setupPlayer(){
+	private void setupPlayer(){
 		charPlayer = new Character(this, 0);
 		charPlayer.setHorizontalFlip(true);
 	}
 
 	/**
-	 * Cuida de toda a renderização do jogo
+	 * Renderiza todo o programa
 	 */
 	@Override
 	public void render () {
@@ -103,7 +91,7 @@ public class Core extends com.badlogic.gdx.Game {
 
 		batch.begin();
 
-		// Draw current screen
+		// Drawing the current screen
 		screen.render(Gdx.graphics.getDeltaTime());
 
 		// Debug

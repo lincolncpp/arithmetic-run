@@ -8,38 +8,28 @@ import com.usp.corrida.Core;
 import com.usp.corrida.utils.Utils;
 
 /**
- * Classe responsável pela renderização do cenário
+ * A classe Background é usado para renderizar todo o cenário de fundo do jogo. Basta chamar a função render no ciclo de renderização.
  */
 public class Background {
-
-    // Core instance
-    Core core;
-
-    // Texture Pack
-    Texture texBackground;
-    Texture texTerrain;
-    Texture texTree;
-
-    // Texture regions
-    TextureRegion texCloud;
-    TextureRegion texBgCloud;
-    TextureRegion texBgMountain;
-    TextureRegion texBgTop;
-
-    TextureRegion texTile1;
-    TextureRegion texTile2;
-
-    // Clouds
     public static final int MAX_CLOUD = 5;
-    Vector2[] cloudPosition = new Vector2[MAX_CLOUD];
-
-    // Trees
     public static final int MAX_TREE = 10;
-    float[] treePositionX = new float[MAX_TREE];
 
-    /**
-     * @param core Instancia do core do jogo
-     */
+    private final Core core;
+
+    private Texture texBackground;
+    private Texture texTerrain;
+    private Texture texTree;
+
+    private TextureRegion texCloud;
+    private TextureRegion texBgCloud;
+    private TextureRegion texBgMountain;
+    private TextureRegion texBgTop;
+    private TextureRegion texTile1;
+    private TextureRegion texTile2;
+
+    private final Vector2[] cloudPosition = new Vector2[MAX_CLOUD];
+    private final float[] treePositionX = new float[MAX_TREE];
+
     public Background(Core core){
         this.core = core;
 
@@ -48,7 +38,7 @@ public class Background {
     }
 
     /**
-     * Reseta os componentes do cenário
+     * Volta para o estado zero
      */
     public void resetBackground(){
         setupClouds();
@@ -56,9 +46,9 @@ public class Background {
     }
 
     /**
-     * Carrega recursos gráficos do jogo
+     * Carrega recursos gráficos do background
      */
-    public void loadResources(){
+    private void loadResources(){
         texBackground = new Texture(Gdx.files.internal("background.png"));
         texTerrain = new Texture(Gdx.files.internal("terrain.png"));
         texTree = new Texture(Gdx.files.internal("tree.png"));
@@ -75,29 +65,29 @@ public class Background {
     /**
      * Define a posição inicial das nuvens
      */
-    public void setupClouds(){
+    private void setupClouds(){
         for(int i = 0; i < MAX_CLOUD; i++){
             cloudPosition[i] = new Vector2(0, 0);
             cloudPosition[i].x = core.rand.getIntRand(-16, (int)core.width);
-            cloudPosition[i].y = core.rand.getIntRand(100,(int)core.height-64);
+            cloudPosition[i].y = core.rand.getIntRand(100, (int)core.height-64);
         }
     }
 
     /**
      * Define a posição incial das árvores
      */
-    public void setupTrees(){
+    private void setupTrees(){
         for(int i = 0;i < MAX_TREE;i++){
             treePositionX[i] = core.rand.getIntRand(-48, (int)core.width*2);
         }
     }
 
     /**
-     * Essa função é chamada antes da função render. É utilizada para atualizar tudo antes da renderização
+     * Chamada logo no início da função render. É utilizada para atualizar tudo antes da renderização
      * @param delta Variação de tempo entre a chamada atual e a última chamada
-     * @param offsetX Deslocamento da coordenada x do cenário
+     * @param offsetX Deslocamento da coordenada x
      */
-    public void update(float delta, float offsetX){
+    private void update(float delta, float offsetX){
         // Updating tree position
         for(int i = 0;i < MAX_TREE;i++){
             float posx = treePositionX[i]-offsetX;
@@ -108,12 +98,12 @@ public class Background {
     /**
      * Renderiza todo o cenário do jogo
      * @param delta Variação de tempo entre a chamada atual e a última chamada
-     * @param offsetX Deslocamento da coordenada x do cenário
+     * @param offsetX Deslocamento da coordenada x
      */
     public void render(float delta, float offsetX){
         update(delta, offsetX);
 
-        // Drawing top effect
+        // Drawing top bar
         int cnt1 = ((int)core.width-1)/16+1;
         for(int i = 0;i < cnt1;i++){
             core.batch.draw(texBgTop, 16*i, core.height-48);
@@ -130,7 +120,6 @@ public class Background {
         // Drawing mountain
         int cnt2 = ((int)core.width-1)/160+1;
         float offset2 = Utils.fixFloat((offsetX/2f)%160);
-
         for(int i = 0;i < cnt2+1;i++){
             core.batch.draw(texBgMountain, 160*i - offset2, 16);
         }
