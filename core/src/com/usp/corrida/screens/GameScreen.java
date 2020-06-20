@@ -13,10 +13,12 @@ import com.usp.corrida.utils.Utils;
  * Lida com a renderização e mecânica de jogo. Para alternar entre telas, use a função setScreen da classe Game, passando como parâmetro o objeto da tela.
  */
 public class GameScreen extends ScreenAdapter {
+    public static final long CHALLENGE_INTERVAL = 500;
     public static final long POINTS_EFFECT_INTERVAL = 65;
     public static final long HURT_INTERVAL = 1500;
     public static final long GAMEOVER_SLIDE = 1000;
     public static final int MAX_NPC = 3;
+    public static final int MAX_LEVEL = 3;
 
     private final Core core;
 
@@ -25,11 +27,15 @@ public class GameScreen extends ScreenAdapter {
     private long tickPoints = 0;
     private long tickHurt = 0;
     private long tickGameOver = 0;
+    private long tickChallenge = 0;
 
     private float offsetX = 0;
 
     private final Character[] npc = new Character[MAX_NPC];
     private float lastNPCX = 0;
+
+    private final int numberRangeMin[] = new int[MAX_LEVEL];
+    private final int numberRangeMax[] = new int[MAX_LEVEL];
 
     private int life = 3;
     private long scoreAdd = 0;
@@ -37,11 +43,17 @@ public class GameScreen extends ScreenAdapter {
     private int challengeValue = 0;
     private Boolean gameOver = false;
     private String gameOverMessage = "";
+    private int npcRecycled = 0;
+    private int currentLevel = -1;
 
     public GameScreen(Core core){
         this.core = core;
 
         texLife = new Texture(Gdx.files.internal("life.png"));
+
+        numberRangeMin[0] = 11; numberRangeMax[0] = 100;
+        numberRangeMin[1] = 101; numberRangeMax[1] = 500;
+        numberRangeMin[2] = 501; numberRangeMax[2] = 1000;
 
         resetScreen();
     }
@@ -53,6 +65,7 @@ public class GameScreen extends ScreenAdapter {
         tickPoints = 0;
         tickHurt = 0;
         tickGameOver = 0;
+        tickChallenge = 0;
 
         offsetX = 0;
         lastNPCX = 0;
@@ -63,10 +76,10 @@ public class GameScreen extends ScreenAdapter {
         challengeValue = 0;
         gameOver = false;
         gameOverMessage = "";
+        npcRecycled = 0;
+        currentLevel = -1;
 
         core.charPlayer.setIsMoving(true);
-
-        refreshChallenge();
 
         setupNPCs();
     }
@@ -76,23 +89,32 @@ public class GameScreen extends ScreenAdapter {
      * @return Nível de dificuldade atual com base na pontuação
      */
     private int getLevel(){
-//        if (score >= 10000000) return 4;
-//        if (score >= 100000) return 3;
-//        if (score >= 1000) return 4;
-        return 1;
+        if (npcRecycled >= 40) return 2;
+        if (npcRecycled >= 20) return 1;
+        return 0;
     }
 
     /**
      * Atualiza o desafio, gerando um novo número para o personagem principal
      */
-    private void refreshChallenge(){
-        int level = getLevel();
-        if (level == 1) challengeValue = core.rand.getIntRand(11, 100);
-        else if (level == 2) challengeValue = core.rand.getIntRand(101, 1000);
-        else if (level == 3) challengeValue = core.rand.getIntRand(1001, 10000);
-        else if (level == 4) challengeValue = core.rand.getIntRand(10001, 100000);
+    private void updateChallenge(){
+        if (currentLevel != getLevel()){
+            currentLevel = getLevel();
+            tickChallenge = System.currentTimeMillis()+CHALLENGE_INTERVAL;
+            core.charPlayer.setText("");
 
-        core.charPlayer.setText(""+challengeValue);
+            for(int i = 0;i < MAX_NPC;i++){
+                if (npc[i].getX()-offsetX > core.width) npc[i].setX(-10000);
+            }
+            lastNPCX = 0;
+            challengeValue = 0;
+        }
+
+        if (tickChallenge > 0 && System.currentTimeMillis() > tickChallenge){
+            challengeValue = core.rand.getIntRand(numberRangeMin[currentLevel], numberRangeMax[currentLevel]);
+            core.charPlayer.setText("" + challengeValue);
+            tickChallenge = 0;
+        }
     }
 
     /**
@@ -100,27 +122,31 @@ public class GameScreen extends ScreenAdapter {
      */
     private void updateNPCAnswer(int i){
         int level = getLevel();
-        if (level == 1){
-            // Only + and -
-            int operation = core.rand.getIntRand(0, 1);
-            int correct = core.rand.getIntRand(1, 10);
 
-            // 60% to pick a correct answer
-            if (correct <= 6) npc[i].setValue(challengeValue);
-            else {
-                npc[i].setValue(core.rand.getIntRand(2, 100));
-                while(npc[i].getValue() == challengeValue) npc[i].setValue(core.rand.getIntRand(2, 100));
-            }
+        int operation = core.rand.getIntRand(1, 10);
+        int correct = core.rand.getIntRand(1, 10);
 
-            if (operation == 1){ // + operation
-                int a = core.rand.getIntRand(1, Math.min(10, npc[i].getValue()-1));
-                npc[i].setText(a+"+"+(npc[i].getValue()-a));
-            }
-            else{ // - operation
-                int a = core.rand.getIntRand(1, 10);
-                npc[i].setText((npc[i].getValue()+a)+"-"+a);
-            }
+        // 60% to pick a correct answer
+        if (correct <= 6) npc[i].setValue(challengeValue);
+        else npc[i].setValue(core.rand.getIntRandDiff(challengeValue-challengeValue/10-2, challengeValue+challengeValue/10+2, challengeValue));
+
+        if (level == 0){ // Only + and -
+            int a = core.rand.getIntRand(1, 10);
+            if (operation <= 5) npc[i].setText(a+"+"+(npc[i].getValue()-a)); // + operation
+            else npc[i].setText((npc[i].getValue()+a)+"-"+a); // - operation
         }
+        else if (level == 1){ // Only + and -
+            int a = core.rand.getIntRand(1, 10);
+            if (operation <= 5) npc[i].setText(a+"+"+(npc[i].getValue()-a)); // + operation
+            else npc[i].setText((npc[i].getValue()+a)+"-"+a); // - operation
+        }
+        else if (level == 2){ // Only + and -
+            int a = core.rand.getIntRand(10, 99);
+            if (operation <= 5) npc[i].setText(a+"+"+(npc[i].getValue()-a)); // + operation
+            else npc[i].setText((npc[i].getValue()+a)+"-"+a); // - operation
+        }
+
+
     }
 
     /**
@@ -137,6 +163,8 @@ public class GameScreen extends ScreenAdapter {
      * Chamada sempre que o personagem perde uma vida. Trata o caso de quando não se tem mais vida, dando inicio às animações de fim de jogo
      */
     private void loseLife(){
+        if (life == 0) return;
+
         life--;
         tickHurt = System.currentTimeMillis()+HURT_INTERVAL;
 
@@ -169,15 +197,16 @@ public class GameScreen extends ScreenAdapter {
             core.setScreen(core.titleScreen);
         }
 
-        if (life > 0){
+        if (life > 0 && challengeValue != 0){
             for(int i = 0; i < MAX_NPC; i++){
-                if (npc[i].getSprite() == 10) continue;
+                if (npc[i].getSprite() == 10 || npc[i].getValue() == 0) continue;
 
                 if (npc[i].isTouched((int)point.x, (int)point.y, offsetX)){
                     if (npc[i].getValue() == challengeValue){
                         scoreAdd += 100;
                         npc[i].setSprite(10);
                         npc[i].setText("");
+                        npc[i].setValue(0);
                     }
                     else loseLife();
                 }
@@ -216,9 +245,15 @@ public class GameScreen extends ScreenAdapter {
      * @param offsetX Deslocamento da coordenada x
      */
     private void recycleNPCs(float offsetX){
+        if (challengeValue == 0) return;
+
         for(int i = 0;i < MAX_NPC;i++) {
             float realX = npc[i].getX()-offsetX;
-            if (realX < -100){
+            if (realX < -80){
+                if (npc[i].getValue() == challengeValue) loseLife();
+
+                npcRecycled++;
+
                 // Setting a new sprite
                 int sid = core.rand.getIntRand(1, 9);
                 npc[i].setSprite(sid);
@@ -227,7 +262,7 @@ public class GameScreen extends ScreenAdapter {
 
                 // Setting a new position
                 float x1 = offsetX + core.width + core.rand.getIntRand(0, (int)(core.width/2f));
-                float x2 = lastNPCX + core.rand.getIntRand(100, (int)(core.width/2f));
+                float x2 = lastNPCX + core.rand.getIntRand(80, (int)(core.width/2f));
                 float newX = Math.max(x1, x2);
                 lastNPCX = newX;
                 npc[i].setX(newX);
@@ -267,7 +302,7 @@ public class GameScreen extends ScreenAdapter {
     private void update(float delta){
         offsetX += delta*30;
 
-        float d = delta*20;
+        float d = delta*30;
         for(int i = 0; i < MAX_NPC; i++){
             if (npc[i].getSprite() == 10) continue;
             npc[i].setX(npc[i].getX()-d);
@@ -279,6 +314,7 @@ public class GameScreen extends ScreenAdapter {
             core.charPlayer.setX(core.charPlayer.getX()+f);
         }
 
+        updateChallenge();
         recycleNPCs(offsetX);
         updateScore();
     }

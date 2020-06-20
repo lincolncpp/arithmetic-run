@@ -41,4 +41,13 @@ public class Random {
     public int getIntRand(int min, int max){
         return min+getIntRand(max-min+1);
     }
+
+    /**
+     * @return Número no intervalo [min, max] e diferente de x
+     */
+    public int getIntRandDiff(int min, int max, int x){
+        int number = getIntRand(min, max);
+        while(number == x) number = getIntRand(min, max);
+        return number;
+    }
 }
