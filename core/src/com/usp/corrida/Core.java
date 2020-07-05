@@ -68,6 +68,9 @@ public class Core extends Game {
 		titleScreen = new TitleScreen(this);
 		gameScreen = new GameScreen(this);
 
+		// Play background music
+		res.mscBackground.play();
+
 		// Initial screen
 		setScreen(titleScreen);
 	}

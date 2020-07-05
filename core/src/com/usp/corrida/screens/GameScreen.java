@@ -16,7 +16,7 @@ public class GameScreen extends ScreenAdapter {
     public static final long CHALLENGE_INTERVAL = 500;
     public static final long POINTS_EFFECT_INTERVAL = 65;
     public static final long HURT_INTERVAL = 1500;
-    public static final long GAMEOVER_SLIDE = 1000;
+    public static final long GAMEOVER_SLIDE = 1500;
     public static final int MAX_NPC = 3;
     public static final int MAX_LEVEL = 3;
 
@@ -167,11 +167,16 @@ public class GameScreen extends ScreenAdapter {
 
         life--;
         tickHurt = System.currentTimeMillis()+HURT_INTERVAL;
+        core.res.sndMiss.play();
 
         if (life == 0){
             // $%!#@
             core.charPlayer.setFrameInterval(60);
             core.charPlayer.setText("$%!#@");
+
+            // Sound effect
+            core.res.mscBackground.stop();
+            core.res.sndGameover.play(0.5f);
 
             // Removing npcs textbox
             for(int j = 0;j < MAX_NPC;j++) npc[j].setText("");
@@ -207,6 +212,8 @@ public class GameScreen extends ScreenAdapter {
                         npc[i].setSprite(10);
                         npc[i].setText("");
                         npc[i].setValue(0);
+
+                        core.res.sndHit.play();
                     }
                     else loseLife();
                 }

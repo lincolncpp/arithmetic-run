@@ -38,6 +38,9 @@ public class TitleScreen extends ScreenAdapter {
 
         // Resetting background
         core.background.resetBackground();
+
+        // Start background music
+        core.res.mscBackground.play();
     }
 
     /**

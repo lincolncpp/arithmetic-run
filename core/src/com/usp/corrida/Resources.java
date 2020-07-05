@@ -1,6 +1,8 @@
 package com.usp.corrida;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 
@@ -21,6 +23,11 @@ public class Resources {
     public int[] SPRITE_WIDTH = new int[MAX_SPRITES];
     public int[] SPRITE_HEIGHT = new int[MAX_SPRITES];
     public int[] SPRITE_FRAMES = new int[MAX_SPRITES];
+
+    public Music mscBackground;
+    public Sound sndGameover;
+    public Sound sndHit;
+    public Sound sndMiss;
 
     /**
      * Carrega todos os recursos
@@ -48,6 +55,14 @@ public class Resources {
         SPRITE_WIDTH[8] = 32; SPRITE_HEIGHT[8] = 32; SPRITE_FRAMES[8] = 2;
         SPRITE_WIDTH[9] = 16; SPRITE_HEIGHT[9] = 16; SPRITE_FRAMES[9] = 4;
         SPRITE_WIDTH[10] = 16; SPRITE_HEIGHT[10] = 16; SPRITE_FRAMES[10] = 6;
+
+        mscBackground = Gdx.audio.newMusic(Gdx.files.internal("music/one.mp3"));
+        mscBackground.setLooping(true);
+        mscBackground.setVolume(0.5f);
+
+        sndGameover = Gdx.audio.newSound(Gdx.files.internal("sound/gameover.wav"));
+        sndHit = Gdx.audio.newSound(Gdx.files.internal("sound/hit.ogg"));
+        sndMiss = Gdx.audio.newSound(Gdx.files.internal("sound/miss.wav"));
     }
 
     /**
@@ -63,5 +78,10 @@ public class Resources {
         for(int i = 0;i < MAX_SPRITES;i++) {
             texSprite[i].dispose();
         }
+
+        mscBackground.dispose();
+        sndGameover.dispose();
+        sndHit.dispose();
+        sndMiss.dispose();
     }
 }
