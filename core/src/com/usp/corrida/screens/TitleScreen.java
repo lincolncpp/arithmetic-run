@@ -19,7 +19,7 @@ public class TitleScreen extends ScreenAdapter {
     private Texture texHelpButton;
     private Texture texHelpScreen;
 
-    private Boolean helpScreen = true;
+    private Boolean helpScreen = false;
 
     public TitleScreen(Core core){
         this.core = core;

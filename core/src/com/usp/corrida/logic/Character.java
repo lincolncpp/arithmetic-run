@@ -242,12 +242,4 @@ public class Character {
             core.res.font20.setColor(1, 1, 1, 1);
         }
     }
-
-    /**
-     * Descarrega todos os recursos
-     */
-    public void dispose(){
-
-
-    }
 }

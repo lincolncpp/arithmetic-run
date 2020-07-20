@@ -138,8 +138,6 @@ public class Core extends Game {
 
 		background.dispose();
 
-		charPlayer.dispose();
-
 		res.dispose();
 	}
 }

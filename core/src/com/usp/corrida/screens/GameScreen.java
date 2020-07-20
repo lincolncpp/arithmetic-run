@@ -18,11 +18,11 @@ public class GameScreen extends ScreenAdapter {
     public static final long HURT_INTERVAL = 1500;
     public static final long GAMEOVER_SLIDE = 1500;
     public static final int MAX_NPC = 3;
-    public static final int MAX_LEVEL = 3;
+    public static final int MAX_LEVEL = 7;
 
     private final Core core;
 
-    private Texture texLife;
+    private final Texture texLife;
 
     private long tickPoints = 0;
     private long tickHurt = 0;
@@ -34,8 +34,8 @@ public class GameScreen extends ScreenAdapter {
     private final Character[] npc = new Character[MAX_NPC];
     private float lastNPCX = 0;
 
-    private final int numberRangeMin[] = new int[MAX_LEVEL];
-    private final int numberRangeMax[] = new int[MAX_LEVEL];
+    private final int[] numberRangeMin = new int[MAX_LEVEL];
+    private final int[] numberRangeMax = new int[MAX_LEVEL];
 
     private int life = 3;
     private long scoreAdd = 0;
@@ -51,9 +51,13 @@ public class GameScreen extends ScreenAdapter {
 
         texLife = new Texture(Gdx.files.internal("life.png"));
 
-        numberRangeMin[0] = 11; numberRangeMax[0] = 100;
-        numberRangeMin[1] = 101; numberRangeMax[1] = 500;
-        numberRangeMin[2] = 501; numberRangeMax[2] = 1000;
+        numberRangeMin[0] = 10; numberRangeMax[0] = 100;
+        numberRangeMin[1] = 100; numberRangeMax[1] = 500;
+        numberRangeMin[2] = 100; numberRangeMax[2] = 500;
+        numberRangeMin[3] = 500; numberRangeMax[3] = 1000;
+        numberRangeMin[4] = 500; numberRangeMax[4] = 1000;
+        numberRangeMin[5] = 1000; numberRangeMax[5] = 5000;
+        numberRangeMin[6] = 1000; numberRangeMax[6] = 5000;
 
         resetScreen();
     }
@@ -85,12 +89,15 @@ public class GameScreen extends ScreenAdapter {
     }
 
     /**
-     * !!!!!!!!!!!!!!!!!!!!! AINDA INCERTO !!!!!!!!!!!!!!!!!!!!!!
-     * @return Nível de dificuldade atual com base na pontuação
+     * @return Nível de dificuldade
      */
     private int getLevel(){
-        if (npcRecycled >= 40) return 2;
-        if (npcRecycled >= 20) return 1;
+        if (npcRecycled >= 150) return 6;
+        if (npcRecycled >= 100) return 5;
+        if (npcRecycled >= 70) return 4;
+        if (npcRecycled >= 50) return 3;
+        if (npcRecycled >= 30) return 2;
+        if (npcRecycled >= 10) return 1;
         return 0;
     }
 
@@ -128,24 +135,43 @@ public class GameScreen extends ScreenAdapter {
 
         // 60% to pick a correct answer
         if (correct <= 6) npc[i].setValue(challengeValue);
-        else npc[i].setValue(core.rand.getIntRandDiff(challengeValue-challengeValue/10-2, challengeValue+challengeValue/10+2, challengeValue));
+        else npc[i].setValue(core.rand.getIntRandDiff(Math.max(10, challengeValue-(level+1)*5), challengeValue+(level+1)*5, challengeValue));
 
-        if (level == 0){ // Only + and -
-            int a = core.rand.getIntRand(1, 10);
+        if (level == 0){ // X = [10, 100]
+            int a = core.rand.getIntRand(1, 9);
             if (operation <= 5) npc[i].setText(a+"+"+(npc[i].getValue()-a)); // + operation
             else npc[i].setText((npc[i].getValue()+a)+"-"+a); // - operation
         }
-        else if (level == 1){ // Only + and -
-            int a = core.rand.getIntRand(1, 10);
+        else if (level == 1){ // X = [100, 500]
+            int a = core.rand.getIntRand(1, 9);
             if (operation <= 5) npc[i].setText(a+"+"+(npc[i].getValue()-a)); // + operation
             else npc[i].setText((npc[i].getValue()+a)+"-"+a); // - operation
         }
-        else if (level == 2){ // Only + and -
-            int a = core.rand.getIntRand(10, 99);
+        else if (level == 2){ // X = [100, 500]
+            int a = core.rand.getIntRand(10, 20);
             if (operation <= 5) npc[i].setText(a+"+"+(npc[i].getValue()-a)); // + operation
             else npc[i].setText((npc[i].getValue()+a)+"-"+a); // - operation
         }
-
+        else if (level == 3){ // X = [500, 1000]
+            int a = core.rand.getIntRand(10, 20);
+            if (operation <= 5) npc[i].setText(a+"+"+(npc[i].getValue()-a)); // + operation
+            else npc[i].setText((npc[i].getValue()+a)+"-"+a); // - operation
+        }
+        else if (level == 4){ // X = [500, 1000]
+            int a = core.rand.getIntRand(20, 50);
+            if (operation <= 5) npc[i].setText(a+"+"+(npc[i].getValue()-a)); // + operation
+            else npc[i].setText((npc[i].getValue()+a)+"-"+a); // - operation
+        }
+        else if (level == 5){ // X = [1000, 5000]
+            int a = core.rand.getIntRand(20, 50);
+            if (operation <= 5) npc[i].setText(a+"+"+(npc[i].getValue()-a)); // + operation
+            else npc[i].setText((npc[i].getValue()+a)+"-"+a); // - operation
+        }
+        else if (level == 6){ // X = [1000, 5000]
+            int a = core.rand.getIntRand(50, 99);
+            if (operation <= 5) npc[i].setText(a+"+"+(npc[i].getValue()-a)); // + operation
+            else npc[i].setText((npc[i].getValue()+a)+"-"+a); // - operation
+        }
 
     }
 
@@ -268,8 +294,8 @@ public class GameScreen extends ScreenAdapter {
                 else npc[i].setY(32);
 
                 // Setting a new position
-                float x1 = offsetX + core.width + core.rand.getIntRand(0, (int)(core.width/2f));
-                float x2 = lastNPCX + core.rand.getIntRand(80, (int)(core.width/2f));
+                float x1 = offsetX + core.width + core.rand.getIntRand(0, (int)(core.width/3f));
+                float x2 = lastNPCX + core.rand.getIntRand(80, (int)(core.width/3f));
                 float newX = Math.max(x1, x2);
                 lastNPCX = newX;
                 npc[i].setX(newX);
@@ -396,9 +422,5 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void dispose(){
         texLife.dispose();
-
-        for(int i = 0;i < MAX_NPC;i++){
-            npc[i].dispose();
-        }
     }
 }
