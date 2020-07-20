@@ -103,6 +103,11 @@ public class Background {
     public void render(float delta, float offsetX){
         update(delta, offsetX);
 
+        // Drawing clouds
+        for(int i = 0; i < MAX_CLOUD; i++){
+            core.batch.draw(texCloud, cloudPosition[i].x, cloudPosition[i].y);
+        }
+
         // Drawing top bar
         int cnt1 = ((int)core.width-1)/16+1;
         for(int i = 0;i < cnt1;i++){
@@ -130,11 +135,6 @@ public class Background {
         for(int i = 0;i < cnt4+1;i++){
             core.batch.draw(texTile1, 16*i-offset4, 16);
             core.batch.draw(texTile2, 16*i-offset4, 0);
-        }
-
-        // Drawing clouds
-        for(int i = 0; i < MAX_CLOUD; i++){
-            core.batch.draw(texCloud, cloudPosition[i].x, cloudPosition[i].y);
         }
 
         // Drawing trees

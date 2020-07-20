@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.usp.corrida.Core;
 import com.usp.corrida.logic.Character;
@@ -16,11 +17,15 @@ public class TitleScreen extends ScreenAdapter {
     private final Core core;
 
     private Texture texHelpButton;
+    private Texture texHelpScreen;
+
+    private Boolean helpScreen = true;
 
     public TitleScreen(Core core){
         this.core = core;
 
         texHelpButton = new Texture(Gdx.files.internal("help.png"));
+        texHelpScreen = new Texture(Gdx.files.internal("screenhelp.png"));
 
         resetScreen();
     }
@@ -44,6 +49,26 @@ public class TitleScreen extends ScreenAdapter {
     }
 
     /**
+     * Chamado quando a tela é tocada
+     * @param point Ponto coordenado, origem no canto inferior esquerdo
+     * @param pointer O ponteiro para o evento
+     * @param button O botão
+     */
+    public void touchDown(Vector2 point, int pointer, int button) {
+        if (helpScreen){
+            helpScreen = false;
+            return;
+        }
+
+        if (point.x >= core.width-32 && point.y >= core.height-32){
+            helpScreen = true;
+            return;
+        }
+
+        core.setScreen(new GameScreen(core));
+    }
+
+    /**
      * Chamada quando esse objeto é definido pela função setScreen da classe Game
      */
     @Override
@@ -54,8 +79,8 @@ public class TitleScreen extends ScreenAdapter {
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean touchDown (int x, int y, int pointer, int button) {
-                core.setScreen(new GameScreen(core));
-
+                Vector2 fixedCoordinate = Utils.fixTouchPosition(core, x, y);
+                TitleScreen.this.touchDown(fixedCoordinate, pointer, button);
                 return true;
             }
         });
@@ -75,6 +100,24 @@ public class TitleScreen extends ScreenAdapter {
      */
     private void update(float delta){
 
+    }
+
+    public void renderHelpBox(){
+        if (!helpScreen) return;
+
+        float w = texHelpScreen.getWidth();
+        float h = texHelpScreen.getHeight();
+        float scale = Math.min(core.width/w, core.height/h)*0.8f;
+        w *= scale;
+        h *= scale;
+        float x = core.width/2-w/2;
+        float y = core.height/2-h/2;
+        core.batch.draw(texHelpScreen, x, y, w, h);
+
+        // Draw "How to play"
+        core.res.font32.setColor(0.8509803921568627f, 0.592156862745098f, 0.0784313725490196f, 1);
+        core.res.font32.draw(core.batch, "COMO JOGAR", 0, y+h-20, core.width, 1, false);
+        core.res.font32.setColor(1, 1, 1, 1);
     }
 
     /**
@@ -103,6 +146,9 @@ public class TitleScreen extends ScreenAdapter {
 
         // Draw help button
         core.batch.draw(texHelpButton, core.width-16-8, core.height-16-8);
+
+        // Draw help box
+        renderHelpBox();
     }
 
     /**
@@ -111,6 +157,7 @@ public class TitleScreen extends ScreenAdapter {
     @Override
     public void dispose(){
         texHelpButton.dispose();
+        texHelpScreen.dispose();
     }
 
 }
