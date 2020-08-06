@@ -6,7 +6,7 @@
 
 Arithmetic run is a open source, cross-platform 2D game made in Java with libGDX.
 
-![in game](https://i.ibb.co/Z8zFMYs/InGame.png)
+<img src="https://i.ibb.co/tM5hMdC/gith.png" width="700px" alt="screenshot"></a>
 
 ## Stack
 [<img src="https://img.stackshare.io/service/995/K85ZWV2F.png" height="60px"><img src="https://img.stackshare.io/service/1010/m8jf0po4imu8t5eemjdd.png" height="60px"><img src="https://img.stackshare.io/service/4339/3c827c8875b77acbbaf83c73eecd0a43_400x400.png" height="60px"><img src="https://img.stackshare.io/service/27/sBsvBbjY.png" height="60px"><img src="https://img.stackshare.io/service/975/gradlephant-social-black-bg.png" height="60px"><img src="https://img.stackshare.io/service/2020/874086.png" height="60px"><img src="https://img.stackshare.io/service/11563/actions.png" height="60px"><img src="https://img.stackshare.io/service/2673/Codecov_Mark_Circle_Pink.png" height="60px">](https://stackshare.io/lincolncpp/corrida-aritmetica)
