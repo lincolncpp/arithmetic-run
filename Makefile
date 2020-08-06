@@ -1,7 +1,7 @@
 PACKAGE=com.usp.corrida
 DEST=docs/
 SRC=core/src/
-TITLE="Corrida Aritmetica - docs"
+TITLE="Arithmetic Run - docs"
 
 doc:
 	rm -rf docs/
