@@ -38,4 +38,4 @@ The documentation can be accessed [here](https://lincolncpp.github.io/corrida-ar
 See also the list of [contributors](/contributors) who participated in this project.
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/lincolncpp/grape2d/blob/master/LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE.md](/LICENSE) file for details.
