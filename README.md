@@ -18,7 +18,7 @@ make docs
 ```
 It uses javadoc to generate a documentation from the source code.
 
-The documentation can be accessed [here](https://lincolncpp.github.io/corrida-aritmetica/).
+The documentation can be accessed [here](https://lincolncpp.github.io/arithmetic-run/).
 
 ## Authors
 
